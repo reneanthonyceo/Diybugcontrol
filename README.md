@@ -36,7 +36,12 @@ shopify theme dev --store your-store.myshopify.com
 shopify theme push --store your-store.myshopify.com
 ```
 
-Store setup, in order, is in [`shopify/SETUP.md`](shopify/SETUP.md).
+```bash
+npm run package    # build dist/diybugcontrol-theme.zip for admin upload
+```
+
+**Getting this onto a store: [`INSTALL.md`](INSTALL.md).** Deeper store
+configuration is in [`shopify/SETUP.md`](shopify/SETUP.md).
 
 ## How pests are modelled
 

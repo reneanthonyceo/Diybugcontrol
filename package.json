@@ -7,7 +7,8 @@
   "scripts": {
     "check": "node scripts/theme-check.mjs",
     "seed": "node shopify/seed.mjs",
-    "seed:dry": "node shopify/seed.mjs --dry-run"
+    "seed:dry": "node shopify/seed.mjs --dry-run",
+    "package": "node scripts/package.mjs"
   },
   "devDependencies": {
     "@shopify/theme-check-node": "^3.28.1"
