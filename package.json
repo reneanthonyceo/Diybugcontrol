@@ -6,9 +6,10 @@
   "description": "Shopify theme for DIY Bug Control",
   "scripts": {
     "check": "node scripts/theme-check.mjs",
-    "seed": "node shopify/seed.mjs",
-    "seed:dry": "node shopify/seed.mjs --dry-run",
-    "package": "node scripts/package.mjs"
+    "seed": "node --env-file-if-exists=.env shopify/seed.mjs",
+    "seed:dry": "node --env-file-if-exists=.env shopify/seed.mjs --dry-run",
+    "package": "node scripts/package.mjs",
+    "seed:definitions": "node --env-file-if-exists=.env shopify/seed.mjs --definitions-only"
   },
   "devDependencies": {
     "@shopify/theme-check-node": "^3.28.1"

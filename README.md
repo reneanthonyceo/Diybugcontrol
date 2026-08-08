@@ -32,8 +32,8 @@ npm run check      # Shopify theme-check; fails on errors
 npm run seed:dry   # preview the store seed without sending requests
 npm run seed       # create definitions, pest collections, and products
 
-shopify theme dev --store your-store.myshopify.com
-shopify theme push --store your-store.myshopify.com
+shopify theme dev --store fcphwt-ms.myshopify.com
+shopify theme push --store fcphwt-ms.myshopify.com
 ```
 
 ```bash

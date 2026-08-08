@@ -40,18 +40,19 @@ git clone https://github.com/reneanthonyceo/Diybugcontrol.git
 cd Diybugcontrol
 
 # Live preview against your real store data, hot-reloading as you edit
-shopify theme dev --store your-store.myshopify.com
+shopify theme dev --store fcphwt-ms.myshopify.com
 
 # Or upload it as an unpublished theme
-shopify theme push --store your-store.myshopify.com --unpublished
+shopify theme push --store fcphwt-ms.myshopify.com --unpublished
 ```
 
 The first command opens a browser and asks you to log in — no API tokens to
 handle.
 
-Replace `your-store.myshopify.com` with your actual store domain. You can find
-it in Shopify admin under **Settings → Domains**; it's the `.myshopify.com` one,
-not your custom domain.
+`fcphwt-ms.myshopify.com` is this store's permanent domain, already filled in.
+Use it rather than `diybugcontrol.com` for every command and API call: the
+Admin API and the CLI only answer on the `.myshopify.com` domain. The custom
+domain is for customers.
 
 ---
 
@@ -75,8 +76,8 @@ it.
 ### Run the seed
 
 ```bash
-export SHOPIFY_STORE=your-store.myshopify.com
-export SHOPIFY_ADMIN_TOKEN=shpat_...
+cp .env.example .env
+# then edit .env and paste your token
 
 npm install
 npm run seed:dry    # prints what it would do, sends nothing

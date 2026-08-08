@@ -10,14 +10,15 @@ The theme reads product and collection metafields in the `dbc` namespace, plus a
 their empty states rather than failing — but they will be empty.
 
 ```bash
-export SHOPIFY_STORE=your-store.myshopify.com
-export SHOPIFY_ADMIN_TOKEN=shpat_...
+cp .env.example .env
+# then edit .env and paste your token
 
-npm run seed -- --definitions-only
+npm run seed:definitions
 ```
 
-The token needs `write_products`, `write_publications`, and `write_metaobjects`.
-Create it under **Settings → Apps and sales channels → Develop apps**.
+The token needs `write_products`, `write_publications`, `write_metaobjects`, and
+`write_content`. Create it under **Settings → Apps and sales channels →
+Develop apps**. Full walkthrough in [`../INSTALL.md`](../INSTALL.md).
 
 Preview without touching the store first:
 
@@ -49,7 +50,7 @@ see the warning below.
 ## 3. Push the theme
 
 ```bash
-shopify theme push --store $SHOPIFY_STORE
+shopify theme push --store fcphwt-ms.myshopify.com --unpublished
 ```
 
 Or `shopify theme dev` to preview against live store data.
