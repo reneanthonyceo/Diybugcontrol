@@ -1,0 +1,70 @@
+{
+  "general": {
+    "home": "Home",
+    "collections": "Pests",
+    "previous": "Previous",
+    "next": "Next",
+    "page_of": "Page {{ current }} of {{ total }}",
+    "meta": {
+      "tags": "Tagged {{ tags }}",
+      "page": "Page {{ page }}"
+    },
+    "not_found": {
+      "title": "That page doesn't exist",
+      "body": "The link may be out of date. Start from your pest, or browse everything we carry.",
+      "shop": "Browse all products",
+      "home": "Back to home"
+    }
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to content",
+    "main_nav": "Main",
+    "breadcrumb": "Breadcrumb",
+    "pagination": "Pagination"
+  },
+  "pest": {
+    "finder_label": "Find products by pest",
+    "finder_empty": "No pests are set up yet. Add the dbc.is_pest metafield to a collection to have it appear here.",
+    "signs_heading": "Signs it's {{ pest }}",
+    "sequence_heading": "Treatment sequence"
+  },
+  "product": {
+    "add_to_cart": "Add to cart",
+    "sold_out": "Out of stock",
+    "quantity": "Quantity",
+    "options": "Option",
+    "description": "Product details",
+    "treats": "Treats",
+    "collection_empty": "No products to show yet.",
+    "price": {
+      "from": "From {{ price }}"
+    },
+    "rating": {
+      "label": "Rated {{ rating }} out of 5 from {{ count }} reviews",
+      "count": {
+        "one": "{{ count }} review",
+        "other": "{{ count }} reviews"
+      }
+    }
+  },
+  "collection": {
+    "empty": "No products in this collection yet.",
+    "product_count": {
+      "one": "{{ count }} product",
+      "other": "{{ count }} products"
+    }
+  },
+  "cart": {
+    "title": "Cart",
+    "heading": "Your cart",
+    "empty": "Your cart is empty.",
+    "continue": "Continue shopping",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "shipping_note": "Calculated at checkout",
+    "update": "Update cart",
+    "checkout": "Checkout",
+    "remove": "Remove",
+    "quantity_for": "Quantity for {{ title }}"
+  }
+}

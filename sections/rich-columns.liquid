@@ -1,0 +1,193 @@
+{% comment %}
+  General-purpose column section, used for the trust band and the how-it-works
+  sequence. The `style` setting decides whether the numbers are shown: numbering
+  is only honest when the content really is ordered.
+{% endcomment %}
+
+<div class="container">
+  <section class="section">
+    {%- if section.settings.heading != blank -%}
+      <div class="section-head">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        <h2>{{ section.settings.heading }}</h2>
+        {%- if section.settings.body != blank -%}
+          <p>{{ section.settings.body }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- case section.settings.style -%}
+      {%- when 'stat' -%}
+        <div class="stat-band">
+          {%- for block in section.blocks -%}
+            <div class="stat" {{ block.shopify_attributes }}>
+              <span class="stat-value tabular">{{ block.settings.title }}</span>
+              <span class="stat-label">{{ block.settings.body }}</span>
+            </div>
+          {%- endfor -%}
+        </div>
+
+      {%- when 'numbered' -%}
+        <ol class="numbered">
+          {%- for block in section.blocks -%}
+            <li {{ block.shopify_attributes }}>
+              <span class="step-num tabular" aria-hidden="true">{{ forloop.index }}</span>
+              <div class="numbered-body">
+                <h3>{{ block.settings.title }}</h3>
+                <p class="muted">{{ block.settings.body }}</p>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ol>
+
+      {%- else -%}
+        <div class="plain-cols">
+          {%- for block in section.blocks -%}
+            <article class="panel plain-col" {{ block.shopify_attributes }}>
+              <h3>{{ block.settings.title }}</h3>
+              <p class="muted">{{ block.settings.body }}</p>
+            </article>
+          {%- endfor -%}
+        </div>
+    {%- endcase -%}
+  </section>
+</div>
+
+{% stylesheet %}
+  .stat-band {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .stat-value {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1.1;
+  }
+  .stat-label {
+    font-size: var(--text-small);
+    color: var(--color-muted-foreground);
+    line-height: 1.4;
+  }
+
+  .numbered {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+  .numbered li {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+  .numbered .step-num {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+  }
+  .numbered-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .numbered-body p {
+    font-size: var(--text-small);
+    line-height: 1.5;
+  }
+
+  .plain-cols {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .plain-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .plain-col h3 { font-size: 1.05rem; }
+  .plain-col p {
+    font-size: var(--text-small);
+    line-height: 1.55;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Columns",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "stat", "label": "Stat band" },
+        { "value": "numbered", "label": "Numbered sequence" },
+        { "value": "plain", "label": "Plain cards" }
+      ],
+      "default": "plain",
+      "info": "Use the numbered style only when the order genuinely matters."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "body",
+      "label": "Body"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Columns",
+      "blocks": [
+        { "type": "column" },
+        { "type": "column" },
+        { "type": "column" }
+      ]
+    }
+  ]
+}
+{% endschema %}

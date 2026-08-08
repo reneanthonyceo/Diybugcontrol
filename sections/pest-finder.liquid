@@ -1,0 +1,98 @@
+{% comment %}
+  Pest finder — the primary navigation affordance on this store.
+
+  A pest is a collection carrying the `dbc.is_pest` boolean metafield. Modelling
+  pests as collections rather than metaobjects means a product joins a pest by
+  ordinary collection membership, which a merchant already understands and which
+  keeps collection pages, filtering, and search working for free.
+{% endcomment %}
+
+{%- liquid
+  assign pest_collections = collections | where: 'metafields.dbc.is_pest.value', true
+  assign current_handle = ''
+  if template.name == 'collection'
+    assign current_handle = collection.handle
+  endif
+-%}
+
+<div class="container">
+  <section class="section" id="{{ section.settings.anchor | default: 'find-your-pest' }}">
+    {%- if section.settings.heading != blank -%}
+      <div class="section-head">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        <h2>{{ section.settings.heading }}</h2>
+        {%- if section.settings.body != blank -%}
+          <p>{{ section.settings.body }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if pest_collections.size > 0 -%}
+      <nav aria-label="{{ 'pest.finder_label' | t }}">
+        <ul class="finder-grid">
+          {%- for pest in pest_collections -%}
+            <li>
+              <a
+                class="finder-tile"
+                href="{{ pest.url }}"
+                {% if pest.handle == current_handle %}aria-current="page"{% endif %}
+              >
+                {% render 'glyph', glyph: pest.metafields.dbc.glyph.value, size: 34 %}
+                <span class="finder-label">
+                  {{ pest.metafields.dbc.short_name.value | default: pest.title }}
+                </span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- else -%}
+      {%- comment -%}
+        Empty state is deliberate. A silent section is worse than a clear
+        instruction while the store is being set up.
+      {%- endcomment -%}
+      <p class="muted">{{ 'pest.finder_empty' | t }}</p>
+    {%- endif -%}
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "Pest finder",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Start here"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What are you dealing with?"
+    },
+    {
+      "type": "text",
+      "id": "body",
+      "label": "Body",
+      "default": "Pick your pest for the identification signs, the treatment sequence, and the products that suit it."
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "info": "Used by in-page links, e.g. a hero button pointing at #find-your-pest.",
+      "default": "find-your-pest"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pest finder"
+    }
+  ]
+}
+{% endschema %}

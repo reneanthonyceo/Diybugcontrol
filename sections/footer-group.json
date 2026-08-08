@@ -1,0 +1,37 @@
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "pests": {
+          "type": "menu",
+          "settings": {
+            "heading": "Common pests",
+            "menu": "footer"
+          }
+        },
+        "shop": {
+          "type": "menu",
+          "settings": {
+            "heading": "Shop",
+            "menu": "main-menu"
+          }
+        },
+        "label": {
+          "type": "text",
+          "settings": {
+            "heading": "Before you treat",
+            "body": "<p>Always read the product label in full. Label directions are the legal instructions for use, and they override anything written here.</p>"
+          }
+        }
+      },
+      "block_order": ["pests", "shop", "label"],
+      "settings": {
+        "notice": ""
+      }
+    }
+  },
+  "order": ["footer"]
+}

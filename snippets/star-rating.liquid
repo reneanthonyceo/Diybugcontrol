@@ -1,0 +1,77 @@
+{% comment %}
+  Star rating.
+
+  Reads Shopify's standard `reviews` metafield namespace, which most review apps
+  (Judge.me, Okendo, Shopify Product Reviews) write to. If no rating exists the
+  snippet renders nothing at all rather than an empty five-star row, which would
+  read as a zero-star product.
+
+  Accepts:
+  - product {Product} optional; pulls rating from its metafields
+  - rating  {Number}  optional; overrides the product lookup
+  - count   {Number}  optional review count
+  - size    {Number}  star size in px, default 16
+  - compact {Boolean} hide the numeric text
+
+  Usage: {% render 'star-rating', product: product %}
+{% endcomment %}
+
+{%- liquid
+  assign star_size = size | default: 16
+
+  if rating
+    assign value = rating
+    assign total = count
+  elsif product and product.metafields.reviews.rating.value != blank
+    assign value = product.metafields.reviews.rating.value.rating
+    assign total = product.metafields.reviews.rating_count.value
+  endif
+-%}
+
+{%- if value != blank -%}
+  {%- liquid
+    assign rounded = value | times: 2 | round | divided_by: 2.0
+    assign label = 'product.rating.label' | t: rating: value, count: total
+  -%}
+  <span class="stars">
+    <span class="stars-glyphs" aria-hidden="true">
+      {%- for i in (1..5) -%}
+        {%- liquid
+          assign half_point = i | minus: 0.5
+          assign fill = 'none'
+          if rounded >= i
+            assign fill = 'var(--color-star)'
+          elsif rounded >= half_point
+            assign fill = 'half'
+          endif
+        -%}
+        <svg width="{{ star_size }}" height="{{ star_size }}" viewBox="0 0 24 24">
+          {%- if fill == 'half' -%}
+            <defs>
+              <linearGradient id="star-half-{{ i }}-{{ product.id | default: 'x' }}">
+                <stop offset="50%" stop-color="var(--color-star)"></stop>
+                <stop offset="50%" stop-color="transparent"></stop>
+              </linearGradient>
+            </defs>
+          {%- endif -%}
+          <path
+            d="M12 2.6l2.9 5.9 6.5.95-4.7 4.6 1.1 6.5L12 17.5 6.2 20.5l1.1-6.5-4.7-4.6 6.5-.95z"
+            fill="{% if fill == 'half' %}url(#star-half-{{ i }}-{{ product.id | default: 'x' }}){% else %}{{ fill }}{% endif %}"
+            stroke="var(--color-star)"
+            stroke-width="1.2"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+      {%- endfor -%}
+    </span>
+    {%- unless compact -%}
+      <span class="stars-text tabular">
+        {{ value }}
+        {%- if total != blank %}
+          <span class="muted"> &middot; {{ 'product.rating.count' | t: count: total }}</span>
+        {%- endif -%}
+      </span>
+    {%- endunless -%}
+    <span class="visually-hidden">{{ label }}</span>
+  </span>
+{%- endif -%}

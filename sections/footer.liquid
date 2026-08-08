@@ -1,0 +1,147 @@
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-cols">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'menu' -%}
+            <div class="footer-col" {{ block.shopify_attributes }}>
+              <h2>{{ block.settings.heading }}</h2>
+              <ul>
+                {%- for link in block.settings.menu.links -%}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- when 'text' -%}
+            <div class="footer-col" {{ block.shopify_attributes }}>
+              <h2>{{ block.settings.heading }}</h2>
+              <div class="footer-note">{{ block.settings.body }}</div>
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.notice != blank -%}
+      <p class="footer-notice" role="note">{{ section.settings.notice }}</p>
+    {%- endif -%}
+
+    <p class="footer-legal muted">
+      &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}.
+      {{ powered_by_link }}
+    </p>
+  </div>
+</footer>
+
+{% stylesheet %}
+  .site-footer {
+    margin-top: var(--space-16);
+    background: var(--color-card);
+    border-top: 1px solid var(--color-border);
+  }
+  .footer-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding-block: var(--space-12);
+  }
+  .footer-cols {
+    display: grid;
+    gap: var(--space-8);
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  }
+  .footer-col h2 {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-muted-foreground);
+    margin-bottom: var(--space-3);
+  }
+  .footer-col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .footer-col a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    color: var(--color-foreground);
+    text-decoration: none;
+    font-size: var(--text-small);
+  }
+  .footer-col a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+  .footer-note,
+  .footer-note p {
+    font-size: var(--text-small);
+    color: var(--color-muted-foreground);
+    line-height: 1.5;
+  }
+  .footer-notice {
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    font-size: var(--text-small);
+    line-height: 1.5;
+  }
+  .footer-legal { font-size: var(--text-small); }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "notice",
+      "label": "Site-wide notice",
+      "info": "Use for compliance or label guidance shown on every page."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Before you treat"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body"
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "groups": ["footer"]
+  }
+}
+{% endschema %}

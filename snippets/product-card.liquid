@@ -1,0 +1,73 @@
+{% comment %}
+  Product card.
+
+  The whole card is a single link with one accessible name — no competing
+  add-to-cart button. That is deliberate: MASTER.md limits the accent colour to
+  one CTA per viewport, and a grid of twelve orange buttons destroys that.
+  Purchase happens on the product page.
+
+  Accepts:
+  - product {Product} required
+  - loading {String} 'lazy' or 'eager', default 'lazy'
+
+  Usage: {% render 'product-card', product: product %}
+{% endcomment %}
+
+{%- liquid
+  assign img_loading = loading | default: 'lazy'
+  assign glyph = product.metafields.dbc.glyph.value | default: 'bug'
+  assign unit = product.metafields.dbc.unit.value
+-%}
+
+<article class="card">
+  <a class="card-hit" href="{{ product.url }}">
+    <span class="visually-hidden">{{ product.title }}</span>
+  </a>
+
+  <div class="card-art">
+    {%- if product.featured_media -%}
+      {{
+        product.featured_media
+        | image_url: width: 600
+        | image_tag:
+          loading: img_loading,
+          widths: '240, 360, 480, 600',
+          sizes: '(min-width: 768px) 300px, 45vw',
+          alt: product.featured_media.alt | default: product.title
+      }}
+    {%- else -%}
+      {% render 'glyph', glyph: glyph, size: 56 %}
+    {%- endif -%}
+
+    {%- if product.metafields.dbc.badge.value != blank -%}
+      <span class="card-badge">{{ product.metafields.dbc.badge.value }}</span>
+    {%- endif -%}
+    {%- unless product.available -%}
+      <span class="card-badge is-out">{{ 'product.sold_out' | t }}</span>
+    {%- endunless -%}
+  </div>
+
+  <div class="card-body">
+    <h3 class="card-name">{{ product.title }}</h3>
+    {% render 'star-rating', product: product, size: 14 %}
+
+    {%- if product.metafields.dbc.summary.value != blank -%}
+      <p class="card-summary">{{ product.metafields.dbc.summary.value }}</p>
+    {%- else -%}
+      <p class="card-summary">{{ product.description | strip_html | truncate: 120 }}</p>
+    {%- endif -%}
+
+    <div class="card-foot">
+      <span class="card-price tabular">
+        {%- if product.price_varies -%}
+          {{ 'product.price.from' | t: price: product.price_min | money }}
+        {%- else -%}
+          {{ product.price | money }}
+        {%- endif -%}
+      </span>
+      {%- if unit != blank -%}
+        <span class="card-unit muted">{{ unit }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+</article>

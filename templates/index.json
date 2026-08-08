@@ -1,0 +1,63 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "eyebrow": "Do it yourself, do it once",
+        "heading": "You have a pest problem. Let's get it right the first time.",
+        "body": "<p>Most DIY treatments fail for the same handful of reasons — wrong product, wrong placement, no follow-up. We sell the products and tell you exactly how to use them.</p>",
+        "cta_label": "Find your pest",
+        "cta_url": "#find-your-pest",
+        "cta2_label": "Browse all products",
+        "cta2_url": "/collections/all",
+        "aside_heading": "Treated most this month"
+      }
+    },
+    "pest-finder": {
+      "type": "pest-finder",
+      "settings": {
+        "eyebrow": "Start here",
+        "heading": "What are you dealing with?",
+        "body": "Pick your pest for the identification signs, the treatment sequence, and the products that suit it.",
+        "anchor": "find-your-pest"
+      }
+    },
+    "best-sellers": {
+      "type": "featured-products",
+      "settings": {
+        "eyebrow": "Most bought",
+        "heading": "Best sellers",
+        "body": "What customers reach for most often.",
+        "count": 4,
+        "link_label": "View all"
+      }
+    },
+    "trust": {
+      "type": "rich-columns",
+      "blocks": {
+        "a": { "type": "column", "settings": { "title": "4.5", "body": "Average rating across verified reviews" } },
+        "b": { "type": "column", "settings": { "title": "90 days", "body": "Typical residual on perimeter treatments" } },
+        "c": { "type": "column", "settings": { "title": "Same day", "body": "Dispatch on orders before 2pm" } }
+      },
+      "block_order": ["a", "b", "c"],
+      "settings": { "style": "stat" }
+    },
+    "how": {
+      "type": "rich-columns",
+      "blocks": {
+        "a": { "type": "column", "settings": { "title": "Identify what you have", "body": "The right treatment depends entirely on the species. Our pest pages show the signs that tell them apart." } },
+        "b": { "type": "column", "settings": { "title": "Treat the source, not the sighting", "body": "Killing what you can see rarely ends an infestation. Bait, barriers, and placement do." } },
+        "c": { "type": "column", "settings": { "title": "Follow up on schedule", "body": "Almost every failed DIY treatment is a missed second pass. We tell you when it matters and why." } }
+      },
+      "block_order": ["a", "b", "c"],
+      "settings": {
+        "style": "numbered",
+        "eyebrow": "How this works",
+        "heading": "Three things separate a fix from a cycle"
+      }
+    }
+  },
+  "order": ["hero", "pest-finder", "best-sellers", "trust", "how"]
+}

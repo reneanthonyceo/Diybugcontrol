@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "guide": {
+      "type": "pest-guide",
+      "settings": { "eyebrow": "Identification and treatment" }
+    },
+    "products": {
+      "type": "main-collection",
+      "settings": {
+        "eyebrow": "Recommended",
+        "per_page": 24
+      }
+    },
+    "finder": {
+      "type": "pest-finder",
+      "settings": {
+        "eyebrow": "",
+        "heading": "Dealing with something else?",
+        "body": "",
+        "anchor": "other-pests"
+      }
+    }
+  },
+  "order": ["guide", "products", "finder"]
+}

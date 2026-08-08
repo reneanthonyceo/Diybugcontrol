@@ -1,0 +1,212 @@
+<div class="container">
+  <section class="section">
+    <div class="section-head">
+      <span class="eyebrow">{{ 'cart.title' | t }}</span>
+      <h2>{{ 'cart.heading' | t }}</h2>
+    </div>
+
+    {%- if cart.item_count == 0 -%}
+      <div class="panel cart-empty">
+        <p>{{ 'cart.empty' | t }}</p>
+        <a class="btn btn-primary" href="{{ routes.all_products_collection_url }}">
+          {{ 'cart.continue' | t }}
+        </a>
+      </div>
+    {%- else -%}
+      {%- form 'cart', cart, class: 'cart-layout' -%}
+        <ul class="cart-lines">
+          {%- for item in cart.items -%}
+            <li class="cart-line">
+              <div class="cart-line-art">
+                {%- if item.image -%}
+                  {{
+                    item.image
+                    | image_url: width: 160
+                    | image_tag: loading: 'lazy', widths: '80, 160', alt: item.image.alt | default: item.product.title
+                  }}
+                {%- else -%}
+                  {% render 'glyph', glyph: item.product.metafields.dbc.glyph.value, size: 30 %}
+                {%- endif -%}
+              </div>
+
+              <div class="cart-line-copy">
+                <a class="cart-line-name" href="{{ item.url }}">{{ item.product.title }}</a>
+                {%- unless item.product.has_only_default_variant -%}
+                  <span class="muted">{{ item.variant.title }}</span>
+                {%- endunless -%}
+                {%- if item.product.metafields.dbc.unit.value != blank -%}
+                  <span class="muted">{{ item.product.metafields.dbc.unit.value }}</span>
+                {%- endif -%}
+              </div>
+
+              <div class="cart-qty">
+                <label class="visually-hidden" for="qty-{{ item.index | plus: 1 }}">
+                  {{ 'cart.quantity_for' | t: title: item.product.title }}
+                </label>
+                <input
+                  id="qty-{{ item.index | plus: 1 }}"
+                  class="cart-qty-input tabular"
+                  type="number"
+                  name="updates[]"
+                  value="{{ item.quantity }}"
+                  min="0"
+                  inputmode="numeric"
+                >
+              </div>
+
+              <span class="cart-line-price tabular">{{ item.final_line_price | money }}</span>
+
+              <a class="cart-remove" href="{{ item.url_to_remove }}">{{ 'cart.remove' | t }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        <div class="panel cart-summary">
+          <div class="cart-row">
+            <span>{{ 'cart.subtotal' | t }}</span>
+            <span class="tabular">{{ cart.total_price | money }}</span>
+          </div>
+          <div class="cart-row muted">
+            <span>{{ 'cart.shipping' | t }}</span>
+            <span>{{ 'cart.shipping_note' | t }}</span>
+          </div>
+
+          <button type="submit" name="update" class="btn btn-secondary btn-block">
+            {{ 'cart.update' | t }}
+          </button>
+
+          {% comment %} The one accent action on this page. {% endcomment %}
+          <button type="submit" name="checkout" class="btn btn-accent btn-block">
+            {{ 'cart.checkout' | t }}
+          </button>
+
+          <a class="cart-continue" href="{{ routes.all_products_collection_url }}">
+            {{ 'cart.continue' | t }}
+          </a>
+        </div>
+      {%- endform -%}
+    {%- endif -%}
+  </section>
+</div>
+
+{% stylesheet %}
+  .cart-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+  .cart-layout {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: 1fr minmax(240px, 320px);
+    align-items: start;
+  }
+  @media (max-width: 720px) {
+    .cart-layout { grid-template-columns: 1fr; }
+  }
+  .cart-lines {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .cart-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+  .cart-line-art {
+    flex: none;
+    width: 60px;
+    height: 60px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-alt);
+    color: var(--color-primary);
+    overflow: hidden;
+  }
+  .cart-line-art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .cart-line-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 140px;
+    font-size: var(--text-small);
+  }
+  .cart-line-name {
+    font-weight: 700;
+    font-size: var(--text-body);
+    text-decoration: none;
+  }
+  .cart-line-name:hover { text-decoration: underline; }
+  .cart-qty-input {
+    width: 76px;
+    height: var(--touch-target-min);
+    border: 1px solid var(--color-border-interactive);
+    border-radius: var(--radius-md);
+    padding: 0 var(--space-2);
+    text-align: center;
+    font-family: var(--font-body);
+    font-weight: 700;
+    background: var(--color-card);
+    color: var(--color-foreground);
+  }
+  .cart-line-price {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.15rem;
+    min-width: 76px;
+    text-align: right;
+  }
+  .cart-remove {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--touch-target-min);
+    padding: 0 var(--space-2);
+    color: var(--color-muted-foreground);
+    font-size: var(--text-small);
+  }
+  .cart-remove:hover { color: var(--color-destructive); }
+  .cart-summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    position: sticky;
+    top: 88px;
+  }
+  .cart-row {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    font-size: var(--text-small);
+  }
+  .cart-continue {
+    text-align: center;
+    font-size: var(--text-small);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "settings": [],
+  "enabled_on": {
+    "templates": ["cart"]
+  }
+}
+{% endschema %}

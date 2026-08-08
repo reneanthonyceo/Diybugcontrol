@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {
+        "in_stock_text": "In stock — ships same day before 2pm",
+        "label_note": "Read the product label in full before use. Label directions are the legal instructions and override anything written here."
+      }
+    }
+  },
+  "order": ["main"]
+}

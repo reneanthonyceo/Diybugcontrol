@@ -1,0 +1,208 @@
+{% comment %}
+  Pest guide — identification and treatment sequence for a pest collection.
+
+  Reads collection metafields in the `dbc` namespace. Renders nothing if the
+  collection has no pest data, so it is safe to leave on a shared collection
+  template.
+{% endcomment %}
+
+{%- liquid
+  assign tagline = collection.metafields.dbc.tagline.value
+  assign signs = collection.metafields.dbc.signs.value
+  assign steps = collection.metafields.dbc.steps.value
+  assign glyph = collection.metafields.dbc.glyph.value
+  assign has_signs = false
+  assign has_steps = false
+  if signs != blank and signs.size > 0
+    assign has_signs = true
+  endif
+  if steps != blank and steps.size > 0
+    assign has_steps = true
+  endif
+-%}
+
+{%- if tagline != blank or has_signs or has_steps -%}
+  <section class="pest-hero">
+    <div class="container pest-hero-inner">
+      <nav class="crumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+        <ol>
+          <li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li>
+          <li><a href="{{ routes.collections_url }}">{{ 'general.collections' | t }}</a></li>
+          <li aria-current="page">{{ collection.title }}</li>
+        </ol>
+      </nav>
+
+      <div class="pest-hero-grid">
+        <div class="pest-hero-copy">
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+          <h1>{{ collection.title }}</h1>
+          {%- if tagline != blank -%}
+            <p class="pest-lede">{{ tagline }}</p>
+          {%- endif -%}
+        </div>
+        <div class="pest-hero-art" aria-hidden="true">
+          {% render 'glyph', glyph: glyph, size: 104 %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {%- if has_signs or has_steps -%}
+    <div class="container">
+      <section class="section">
+        <div class="pest-two-col">
+          {%- if has_signs -%}
+            <div class="panel">
+              <h2>{{ 'pest.signs_heading' | t: pest: collection.title | downcase }}</h2>
+              <ul class="check-list">
+                {%- for sign in signs -%}
+                  <li>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M20 6 9 17l-5-5"></path>
+                    </svg>
+                    <span>{{ sign }}</span>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+
+          {%- if has_steps -%}
+            <div class="panel">
+              <h2>{{ 'pest.sequence_heading' | t }}</h2>
+              <ol class="plan-list">
+                {%- for step in steps -%}
+                  <li>
+                    <span class="plan-num tabular" aria-hidden="true">{{ forloop.index }}</span>
+                    <div>
+                      <h3>{{ step.title.value }}</h3>
+                      <p class="muted">{{ step.detail.value }}</p>
+                    </div>
+                  </li>
+                {%- endfor -%}
+              </ol>
+            </div>
+          {%- endif -%}
+        </div>
+      </section>
+    </div>
+  {%- endif -%}
+{%- endif -%}
+
+{% stylesheet %}
+  .pest-hero {
+    background: linear-gradient(160deg, var(--color-surface-alt), var(--color-background) 70%);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .pest-hero-inner {
+    padding-block: var(--space-8) var(--space-12);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  .pest-hero-grid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+  }
+  .pest-hero-copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    align-items: flex-start;
+    max-width: 46ch;
+  }
+  .pest-hero h1 {
+    font-size: var(--text-display);
+    line-height: 1.08;
+  }
+  .pest-lede {
+    font-size: 1.1rem;
+    color: var(--color-muted-foreground);
+  }
+  .pest-hero-art {
+    color: var(--color-primary);
+    opacity: 0.55;
+    flex: none;
+  }
+  .pest-two-col {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    align-items: start;
+  }
+  .pest-two-col .panel h2 { margin-bottom: var(--space-4); }
+  .check-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .check-list li {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+  .check-list svg {
+    flex: none;
+    margin-top: 3px;
+  }
+  .plan-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  .plan-list li {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+  .plan-num {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    background: var(--color-surface-alt);
+    color: var(--color-primary);
+    border: 1.5px solid var(--color-primary);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .plan-list h3 {
+    margin-bottom: var(--space-1);
+    font-size: 1rem;
+  }
+  .plan-list p {
+    font-size: var(--text-small);
+    line-height: 1.5;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Pest guide",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Identification and treatment"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["collection"]
+  }
+}
+{% endschema %}

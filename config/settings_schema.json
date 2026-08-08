@@ -1,0 +1,31 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "DIY Bug Control",
+    "theme_version": "1.0.0",
+    "theme_author": "DIY Bug Control",
+    "theme_documentation_url": "https://github.com/reneanthonyceo/Diybugcontrol",
+    "theme_support_url": "https://github.com/reneanthonyceo/Diybugcontrol/issues"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Colours are defined as tokens in assets/base.css and are contrast-verified against WCAG AA. Editing them here is not supported — change the tokens and re-check the pairs recorded in design-system/diy-bug-control/MASTER.md."
+      }
+    ]
+  },
+  {
+    "name": "Compliance",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_label_note",
+        "label": "Show label disclaimer on product pages",
+        "default": true,
+        "info": "Pesticide efficacy and safety claims are regulated. Leave this on unless legal counsel has advised otherwise."
+      }
+    ]
+  }
+]

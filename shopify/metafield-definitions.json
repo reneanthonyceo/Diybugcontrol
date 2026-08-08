@@ -1,0 +1,138 @@
+{
+  "$comment": "Metafield and metaobject definitions the theme reads. Create these before importing products, or the product and pest templates render their empty states. seed.mjs creates all of them.",
+  "metaobjects": [
+    {
+      "type": "treatment_step",
+      "name": "Treatment step",
+      "displayNameKey": "title",
+      "fieldDefinitions": [
+        { "key": "title", "name": "Title", "type": "single_line_text_field", "required": true },
+        { "key": "detail", "name": "Detail", "type": "multi_line_text_field", "required": true }
+      ],
+      "access": { "storefront": "PUBLIC_READ" },
+      "capabilities": { "publishable": { "enabled": true } }
+    }
+  ],
+  "productDefinitions": [
+    {
+      "key": "summary",
+      "name": "Summary",
+      "namespace": "dbc",
+      "type": "multi_line_text_field",
+      "description": "One or two sentences shown on cards and above the buy box."
+    },
+    {
+      "key": "unit",
+      "name": "Unit",
+      "namespace": "dbc",
+      "type": "single_line_text_field",
+      "description": "Shown beside the price, e.g. '4 pack' or '32 oz'."
+    },
+    {
+      "key": "glyph",
+      "name": "Glyph",
+      "namespace": "dbc",
+      "type": "single_line_text_field",
+      "description": "Fallback icon when the product has no image: bug, ant, bedbug, termite, spider, flea, rodent, mosquito, spray, trap, granule.",
+      "validations": [
+        {
+          "name": "choices",
+          "value": "[\"bug\",\"ant\",\"bedbug\",\"termite\",\"spider\",\"flea\",\"rodent\",\"mosquito\",\"spray\",\"trap\",\"granule\"]"
+        }
+      ]
+    },
+    {
+      "key": "badge",
+      "name": "Badge",
+      "namespace": "dbc",
+      "type": "single_line_text_field",
+      "description": "Optional card badge, e.g. 'Best seller'."
+    },
+    {
+      "key": "kills",
+      "name": "What it kills",
+      "namespace": "dbc",
+      "type": "list.single_line_text_field",
+      "description": "Target species. Must match the registered product label."
+    },
+    {
+      "key": "use_where",
+      "name": "Where to use",
+      "namespace": "dbc",
+      "type": "list.single_line_text_field",
+      "description": "Approved application sites. Must match the registered product label."
+    },
+    {
+      "key": "coverage",
+      "name": "Coverage",
+      "namespace": "dbc",
+      "type": "single_line_text_field",
+      "description": "e.g. 'Up to 500 sq ft per syringe'."
+    },
+    {
+      "key": "application_steps",
+      "name": "Application steps",
+      "namespace": "dbc",
+      "type": "list.single_line_text_field",
+      "description": "Ordered directions for use. Must match the registered product label."
+    },
+    {
+      "key": "safety",
+      "name": "Safety",
+      "namespace": "dbc",
+      "type": "list.single_line_text_field",
+      "description": "Precautionary statements. Must match the registered product label."
+    }
+  ],
+  "collectionDefinitions": [
+    {
+      "key": "is_pest",
+      "name": "Is a pest collection",
+      "namespace": "dbc",
+      "type": "boolean",
+      "description": "Set true to make this collection appear in the pest finder."
+    },
+    {
+      "key": "short_name",
+      "name": "Short name",
+      "namespace": "dbc",
+      "type": "single_line_text_field",
+      "description": "Label used in the pest finder tiles, e.g. 'Roaches'."
+    },
+    {
+      "key": "glyph",
+      "name": "Glyph",
+      "namespace": "dbc",
+      "type": "single_line_text_field",
+      "description": "Silhouette for this pest. Each pest should differ — a grid of identical bugs defeats the finder.",
+      "validations": [
+        {
+          "name": "choices",
+          "value": "[\"bug\",\"ant\",\"bedbug\",\"termite\",\"spider\",\"flea\",\"rodent\",\"mosquito\"]"
+        }
+      ]
+    },
+    {
+      "key": "tagline",
+      "name": "Tagline",
+      "namespace": "dbc",
+      "type": "single_line_text_field",
+      "description": "One-line problem statement shown in the pest hero."
+    },
+    {
+      "key": "signs",
+      "name": "Signs",
+      "namespace": "dbc",
+      "type": "list.single_line_text_field",
+      "description": "Identification signs, shown as a checklist."
+    },
+    {
+      "key": "steps",
+      "name": "Treatment sequence",
+      "namespace": "dbc",
+      "type": "list.metaobject_reference",
+      "description": "Ordered treatment_step metaobjects.",
+      "validations": [{ "name": "metaobject_definition_type", "value": "treatment_step" }]
+    }
+  ]
+}

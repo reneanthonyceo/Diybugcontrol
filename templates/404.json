@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": { "type": "main-404", "settings": {} },
+    "finder": {
+      "type": "pest-finder",
+      "settings": {
+        "eyebrow": "",
+        "heading": "Common pests",
+        "body": "",
+        "anchor": "pests-404"
+      }
+    }
+  },
+  "order": ["main", "finder"]
+}
