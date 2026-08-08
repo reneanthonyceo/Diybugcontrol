@@ -1,0 +1,335 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PestFinder from '../components/PestFinder.astro';
+import ProductCard from '../components/ProductCard.astro';
+import Glyph from '../components/Glyph.astro';
+import { bestSellers, getPest } from '../data/catalog';
+
+const featured = bestSellers(4);
+
+// Named explicitly rather than derived — this is an editorial pick, and
+// pretending it comes from live data would be a lie.
+const topPests = ['cockroaches', 'ants', 'mice-and-rats']
+  .map((slug) => getPest(slug))
+  .filter((pest) => pest !== undefined);
+
+const steps = [
+  {
+    title: 'Identify what you have',
+    detail:
+      'The right treatment depends entirely on the species. Our pest pages show the signs that tell them apart.',
+  },
+  {
+    title: 'Treat the source, not the sighting',
+    detail:
+      'Killing what you can see rarely ends an infestation. Bait, barriers, and placement do.',
+  },
+  {
+    title: 'Follow up on schedule',
+    detail:
+      'Almost every failed DIY treatment is a missed second pass. We tell you when it matters and why.',
+  },
+];
+---
+
+<BaseLayout
+  title="DIY Bug Control — Pest control products and straight instructions"
+  description="Professional-grade pest control products for homeowners, with the application guidance that actually makes them work. Identify your pest, get the right treatment, do it once."
+>
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <span class="eyebrow">Do it yourself, do it once</span>
+        <h1>You have a pest problem. Let's get it right the first time.</h1>
+        <p class="lede">
+          Most DIY treatments fail for the same handful of reasons — wrong product,
+          wrong placement, no follow-up. We sell the products and tell you exactly
+          how to use them.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-accent" href="#find-your-pest">Find your pest</a>
+          <a class="btn btn-secondary" href="/shop/">Browse all products</a>
+        </div>
+      </div>
+
+      <aside class="hero-aside">
+        <h2 class="aside-title">Treated most this month</h2>
+        <ul class="aside-list">
+          {
+            topPests.map((pest) => (
+              <li>
+                <a href={`/pests/${pest.slug}/`}>
+                  <span class="aside-icon" aria-hidden="true">
+                    <Glyph name={pest.glyph} size={26} />
+                  </span>
+                  <span class="aside-copy">
+                    <span class="aside-name">{pest.name}</span>
+                    <span class="aside-note">{pest.signs[0]}</span>
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <div class="container">
+    <section class="section" id="find-your-pest">
+      <div class="section-head">
+        <span class="eyebrow">Start here</span>
+        <h2>What are you dealing with?</h2>
+        <p>
+          Pick your pest for the identification signs, the treatment sequence, and
+          the products that suit it.
+        </p>
+      </div>
+      <PestFinder />
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span class="eyebrow">Most bought</span>
+        <h2>Best sellers</h2>
+        <p>What customers reach for most often, ranked by review volume.</p>
+      </div>
+      <div class="grid-auto">
+        {featured.map((product) => <ProductCard product={product} />)}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="trust">
+        <div class="trust-item">
+          <span class="trust-num tabular">4.5</span>
+          <span class="trust-label">Average rating across 8,900+ reviews</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-num tabular">90 days</span>
+          <span class="trust-label">Typical residual on perimeter treatments</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-num tabular">Same day</span>
+          <span class="trust-label">Dispatch on orders before 2pm</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span class="eyebrow">How this works</span>
+        <h2>Three things separate a fix from a cycle</h2>
+      </div>
+      <ol class="steps">
+        {
+          steps.map((step, i) => (
+            <li class="step">
+              <span class="step-num tabular" aria-hidden="true">{i + 1}</span>
+              <div class="step-body">
+                <h3>{step.title}</h3>
+                <p class="muted">{step.detail}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="section">
+      <div class="cta panel">
+        <div class="cta-copy">
+          <h2>Not sure where to start?</h2>
+          <p class="muted">
+            The pest pages walk through identification before they recommend anything
+            to buy.
+          </p>
+        </div>
+        <a class="btn btn-primary" href="/pests/">Find your pest</a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .hero {
+    background: linear-gradient(160deg, var(--color-surface-alt), var(--color-background) 65%);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .hero-inner {
+    padding-block: clamp(var(--space-12), 8vw, 96px);
+    display: grid;
+    gap: var(--space-12);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .hero-inner {
+      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+    }
+  }
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-width: 44ch;
+  }
+
+  .hero-aside {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .aside-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-muted-foreground);
+  }
+  .aside-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .aside-list a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    color: var(--color-foreground);
+    text-decoration: none;
+    transition: background-color var(--duration-hover) var(--ease-out);
+  }
+  .aside-list a:hover {
+    background: var(--color-surface-alt);
+  }
+  .aside-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-alt);
+    color: var(--color-primary);
+  }
+  .aside-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .aside-name {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .aside-note {
+    font-size: 0.78rem;
+    color: var(--color-muted-foreground);
+    line-height: 1.4;
+  }
+  .hero h1 {
+    font-size: var(--text-display);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+  .lede {
+    font-size: 1.125rem;
+    color: var(--color-muted-foreground);
+    line-height: 1.55;
+    max-width: var(--measure);
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  .trust {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+  }
+  .trust-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .trust-num {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1.1;
+  }
+  .trust-label {
+    font-size: var(--text-small);
+    color: var(--color-muted-foreground);
+    line-height: 1.4;
+  }
+
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    counter-reset: step;
+  }
+  .step {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+  .step-num {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+  .step-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .step-body p {
+    font-size: var(--text-small);
+    line-height: 1.5;
+  }
+
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+    padding: var(--space-8);
+  }
+  .cta-copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+</style>

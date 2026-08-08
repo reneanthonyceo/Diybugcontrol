@@ -1,0 +1,108 @@
+---
+import { pests } from '../data/catalog';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container inner">
+    <div class="cols">
+      <div class="col">
+        <h2>Common pests</h2>
+        <ul>
+          {pests.slice(0, 5).map((p) => (
+            <li><a href={`/pests/${p.slug}/`}>{p.name}</a></li>
+          ))}
+        </ul>
+      </div>
+      <div class="col">
+        <h2>Shop</h2>
+        <ul>
+          <li><a href="/shop/">All products</a></li>
+          <li><a href="/pests/">Find your pest</a></li>
+          <li><a href="/guides/">Application guides</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h2>Before you treat</h2>
+        <p class="note">
+          Always read the product label in full. Label directions are the legal
+          instructions for use, and they override anything written here.
+        </p>
+      </div>
+    </div>
+
+    <p class="placeholder-notice" role="note">
+      <strong>Demonstration site.</strong> Every product, price, rating, and review
+      shown here is placeholder content created to build out the templates. Nothing
+      is for sale and no claim on this site has been verified.
+    </p>
+
+    <p class="legal muted">© {year} DIY Bug Control. Built on the design system in <code>design-system/diy-bug-control/</code>.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-16);
+    background: var(--color-card);
+    border-top: 1px solid var(--color-border);
+  }
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding-block: var(--space-12);
+  }
+  .cols {
+    display: grid;
+    gap: var(--space-8);
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  }
+  .col h2 {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-muted-foreground);
+    margin-bottom: var(--space-3);
+  }
+  .col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .col a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    color: var(--color-foreground);
+    text-decoration: none;
+    font-size: var(--text-small);
+  }
+  .col a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+  .note {
+    font-size: var(--text-small);
+    color: var(--color-muted-foreground);
+    line-height: 1.5;
+  }
+  .placeholder-notice {
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    font-size: var(--text-small);
+    line-height: 1.5;
+  }
+  .legal {
+    font-size: var(--text-small);
+  }
+  code {
+    font-size: 0.9em;
+  }
+</style>

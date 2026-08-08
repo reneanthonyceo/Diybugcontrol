@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { pests } from '../../data/catalog';
+
+const mistakes = [
+  {
+    title: 'Spraying when you should be baiting',
+    detail:
+      'Contact spray kills what it touches and scatters the rest. For roaches and ants, that turns one colony into several. Bait is slower and finishes the job.',
+  },
+  {
+    title: 'Treating the sighting instead of the harborage',
+    detail:
+      'Where you see a pest is rarely where it lives. Monitors tell you where activity actually concentrates — treat there.',
+  },
+  {
+    title: 'Skipping the second application',
+    detail:
+      'Eggs survive most treatments. The follow-up pass at 10 to 14 days is what ends a cycle rather than trimming it.',
+  },
+  {
+    title: 'Under-dosing the trap count',
+    detail:
+      'One trap for a rodent problem reads as reasonable and fails reliably. Six is the working number for mice.',
+  },
+  {
+    title: 'Cleaning the ant trail before baiting',
+    detail:
+      'The pheromone trail is the delivery system. Wipe it and you have to wait for them to rebuild it.',
+  },
+  {
+    title: 'Ignoring the label',
+    detail:
+      'Mix rates, re-entry intervals, and surface restrictions are on the label for legal reasons. They are also where the efficacy data lives.',
+  },
+];
+---
+
+<BaseLayout
+  title="Application guides | DIY Bug Control"
+  description="How to apply pest control products correctly — the sequence, the timing, and the mistakes that cause most DIY treatments to fail."
+>
+  <div class="container">
+    <section class="section">
+      <div class="section-head">
+        <span class="eyebrow">Guides</span>
+        <h2>Get the application right</h2>
+        <p>
+          Product choice matters less than most people expect. Placement, timing, and
+          follow-up are what separate a fix from a cycle.
+        </p>
+      </div>
+
+      <div class="grid">
+        {
+          mistakes.map((item) => (
+            <article class="panel card">
+              <h3>{item.title}</h3>
+              <p class="muted">{item.detail}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span class="eyebrow">By pest</span>
+        <h2>Treatment sequences</h2>
+        <p>Each pest page carries its own ordered sequence with the reasoning behind it.</p>
+      </div>
+      <ul class="links">
+        {
+          pests.map((pest) => (
+            <li>
+              <a href={`/pests/${pest.slug}/`}>
+                {pest.name}
+                <span class="muted"> — {pest.steps.length} steps</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .card h3 {
+    font-size: 1.05rem;
+  }
+  .card p {
+    font-size: var(--text-small);
+    line-height: 1.55;
+  }
+  .links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  }
+  .links a {
+    display: flex;
+    align-items: center;
+    min-height: var(--touch-target-min);
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: var(--text-small);
+  }
+  .links a:hover {
+    border-color: var(--color-primary);
+    background: var(--color-surface-alt);
+  }
+</style>

@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PestFinder from '../components/PestFinder.astro';
+---
+
+<BaseLayout
+  title="Page not found | DIY Bug Control"
+  description="That page doesn't exist. Start from your pest instead."
+>
+  <div class="container">
+    <section class="section">
+      <div class="section-head">
+        <span class="eyebrow">404</span>
+        <h2>That page doesn't exist</h2>
+        <p>
+          The link may be out of date. Start from your pest, or browse everything we
+          carry.
+        </p>
+      </div>
+      <div class="actions">
+        <a class="btn btn-primary" href="/pests/">Find your pest</a>
+        <a class="btn btn-secondary" href="/shop/">Browse all products</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <PestFinder heading="Common pests" />
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+</style>

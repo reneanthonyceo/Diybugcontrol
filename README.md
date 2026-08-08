@@ -1,53 +1,95 @@
 # DIY Bug Control
 
-## UI/UX Pro Max skill
+A pest-control storefront built on Astro, designed against the system in
+`design-system/diy-bug-control/`.
 
-This repository vendors the [ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)
-skill bundle (v2.13.0, MIT) under `.claude/skills/`. Claude Code picks the skills
-up automatically for any session opened in this repo.
+> **This is a demonstration build.** Every product, price, rating, and review in
+> `src/data/catalog.ts` is placeholder content written to exercise the templates.
+> Nothing is for sale and no claim has been verified. Efficacy and safety copy in
+> particular must be replaced with text from the actual product label before this
+> site goes anywhere near a customer — that text is regulated.
 
-### Installed skills
+## Commands
 
-| Skill | What it covers |
+```bash
+npm install
+npm run dev      # dev server at localhost:4321
+npm run build    # static build to dist/
+npm run preview  # serve the build
+npm run check    # Astro + TypeScript diagnostics
+npm run smoke    # browser smoke test against a running preview
+```
+
+`npm run smoke` drives a real Chromium over the key pages in light and dark at
+desktop and mobile widths. It fails on console errors, non-200 responses,
+horizontal overflow, fonts that failed to load, and a broken add-to-cart flow,
+and drops full-page screenshots in `.smoke-shots/`. Point it elsewhere with
+`SMOKE_BASE_URL`.
+
+## What's here
+
+| Route | Purpose |
 | --- | --- |
-| `ui-ux-pro-max` | Core design intelligence: 84 UI styles, 192 color palettes, 74 font pairings, 98 UX guidelines, 25 chart types, 22 tech stacks |
-| `design` | Umbrella design skill — brand identity, logos, banners, icons, social images |
-| `design-system` | Three-layer design tokens (primitive → semantic → component) and component specs |
-| `brand` | Brand voice, visual identity, messaging frameworks, style guides |
-| `ui-styling` | shadcn/ui + Tailwind implementation patterns, canvas visuals (bundles OFL fonts) |
-| `banner-design` | Social, ad, hero, and print banner art direction |
-| `slides` | HTML presentations with Chart.js and design tokens |
+| `/` | Hero, pest finder, best sellers, trust band, how-it-works |
+| `/pests/` | All pests, with the signs that distinguish them |
+| `/pests/[slug]/` | Identification, treatment sequence, ranked products, comparison table, pest-filtered reviews |
+| `/products/[slug]/` | Buy box, what it kills, where to use, safety, application steps, rating breakdown, reviews |
+| `/shop/` | Full catalog |
+| `/guides/` | The mistakes that cause most DIY treatments to fail |
+| `/cart/` | Cart review — **stubbed**, see below |
 
-### Using it directly
+Pest landing pages are the intended acquisition channel, which is why the site is
+static-first: they need to be fast and indexable.
 
-The core skill ships a searchable CSV database driven by a Python 3 script
-(standard library only, no dependencies):
+## Architecture
 
-```bash
-# Search a domain: style, color, chart, landing, product, ux, typography, icons, gsap, react, web, google-fonts
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "pest control service website" -d style
+- **Astro 7, zero client framework.** The only JavaScript shipped is the cart
+  stub — a few dozen lines of vanilla JS. Everything else is static HTML.
+- **`src/data/catalog.ts` is the single source of content.** Pests and products
+  cross-reference by slug; every route derives from it. Replacing the catalog
+  replaces the site.
+- **Design tokens live in `src/styles/global.css`,** mirroring
+  `design-system/diy-bug-control/tokens.css`. Components read tokens and never
+  hard-code color.
+- **Fonts are self-hosted and subset.** Rubik and Nunito Sans, latin only,
+  variable weight axis preserved — 54KB total, no third-party request on the
+  critical path.
 
-# Stack-specific guidance
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "hero section" -s nextjs
+### The cart is a stub
 
-# Generate a complete design system
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "pest control booking site" \
-  --design-system --project-name diybugcontrol
-```
+`/cart/` keeps line items in `localStorage` so the flow can be reviewed end to
+end. There is no backend, no inventory check, no tax or shipping logic, and no
+payment processing. The checkout button says so rather than pretending. Wiring
+real commerce means introducing a provider (Shopify Storefront, Stripe, or
+similar) and moving cart state server-side.
 
-Run `search.py --help` for the full flag list.
+## Design system
 
-### Updating
+Tokens, type scale, contrast verification, and component rules are documented in
+`design-system/diy-bug-control/MASTER.md`. `swatches.html` in that folder is a
+visual reference for the palette and type.
 
-Re-copy `.claude/skills/` from a fresh checkout of the upstream repository, or
-run the official installer:
+Three rules from that document shape the UI directly:
 
-```bash
-npx ui-ux-pro-max-cli init --ai claude
-```
+- **One accent CTA per viewport.** Orange is reserved for the single primary
+  action — the hero CTA, the buy box. Product cards are entirely clickable
+  instead of carrying competing buttons.
+- **Interactive borders are a separate token.** `--color-border` is decorative
+  and fails 3:1; `--color-border-interactive` carries anything a user must aim
+  at.
+- **Safety and application copy sit above marketing copy** on product pages.
 
-### Licensing
+## Accessibility
 
-Skill content is MIT-licensed by NextLevelBuilder. Fonts under
-`.claude/skills/ui-styling/canvas-fonts/` are SIL Open Font License; each
-family's `*-OFL.txt` sits alongside it.
+Skip link, landmark structure, visible focus states, 44×44px minimum targets,
+`aria-current` on active navigation, `role="alert"` on errors, and
+`prefers-reduced-motion` honored. Contrast pairs are calculated and recorded in
+`MASTER.md` §3 — the palette deviates from the generated one specifically to
+clear AA for normal-size button text.
+
+## Replacing the placeholder catalog
+
+`src/data/catalog.ts` exports `pests` and `products` against typed interfaces.
+Swap the arrays for real data and every route follows. Fields that carry legal
+weight — `kills`, `safety`, `applicationSteps`, `coverage` — must come from the
+registered product label, not from marketing copy.

@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { products } from '../../data/catalog';
+
+const sorted = [...products].sort((a, b) => Number(b.inStock) - Number(a.inStock) || b.rating - a.rating);
+---
+
+<BaseLayout
+  title="All products | DIY Bug Control"
+  description="Every product we carry — baits, sprays, traps, concentrates, and application equipment for household pest control."
+>
+  <div class="container">
+    <section class="section">
+      <div class="section-head">
+        <span class="eyebrow">Shop</span>
+        <h2>All products</h2>
+        <p>
+          {products.length} products, sorted by availability then rating. If you're not sure
+          what you need, <a href="/pests/">start from your pest</a> instead.
+        </p>
+      </div>
+      <div class="grid-auto">
+        {sorted.map((product) => <ProductCard product={product} />)}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

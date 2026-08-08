@@ -1,0 +1,141 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link
+      rel="preload"
+      href="/fonts/Rubik.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/NunitoSans.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <meta name="theme-color" content="#047857" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b1a14" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <div class="toast" data-toast hidden role="status" aria-live="polite"></div>
+
+    <script>
+      /**
+       * Cart stub. Holds a line-item count in localStorage so the header badge
+       * and the add-to-cart confirmation behave like the real thing. There is
+       * no backend, no pricing logic, and no checkout behind this.
+       */
+      const KEY = 'dbc-cart';
+
+      type Cart = Record<string, number>;
+
+      const read = (): Cart => {
+        try {
+          return JSON.parse(localStorage.getItem(KEY) ?? '{}') as Cart;
+        } catch {
+          return {};
+        }
+      };
+
+      const total = (cart: Cart) =>
+        Object.values(cart).reduce((sum, n) => sum + n, 0);
+
+      const paint = () => {
+        const count = total(read());
+        document.querySelectorAll<HTMLElement>('[data-cart-count]').forEach((el) => {
+          el.textContent = String(count);
+          el.hidden = count === 0;
+        });
+      };
+
+      let toastTimer: number | undefined;
+      const toast = (message: string) => {
+        const el = document.querySelector<HTMLElement>('[data-toast]');
+        if (!el) return;
+        el.textContent = message;
+        el.hidden = false;
+        el.classList.add('is-visible');
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => {
+          el.classList.remove('is-visible');
+          el.hidden = true;
+        }, 3200);
+      };
+
+      document.addEventListener('click', (event) => {
+        const button = (event.target as HTMLElement)?.closest<HTMLElement>('[data-add-to-cart]');
+        if (!button) return;
+        const slug = button.dataset.addToCart;
+        const name = button.dataset.productName ?? 'Item';
+        if (!slug) return;
+
+        const cart = read();
+        cart[slug] = (cart[slug] ?? 0) + 1;
+        localStorage.setItem(KEY, JSON.stringify(cart));
+        paint();
+        toast(`${name} added to cart`);
+      });
+
+      paint();
+      window.addEventListener('storage', paint);
+    </script>
+
+    <style>
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: var(--space-6);
+        transform: translate(-50%, 12px);
+        z-index: 50;
+        max-width: calc(100vw - var(--space-8));
+        background: var(--color-primary);
+        color: var(--color-on-primary);
+        font-weight: 700;
+        font-size: var(--text-small);
+        padding: var(--space-3) var(--space-6);
+        border-radius: var(--radius-full);
+        box-shadow: var(--shadow-hover);
+        opacity: 0;
+        transition:
+          opacity var(--duration-card) var(--ease-out),
+          transform var(--duration-card) var(--ease-out);
+      }
+      .toast.is-visible {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    </style>
+  </body>
+</html>

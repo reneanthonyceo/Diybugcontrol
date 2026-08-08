@@ -1,0 +1,274 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { products } from '../data/catalog';
+
+// The cart is rendered client-side from localStorage. Product facts are
+// serialised here so the page never has to guess at a name or price.
+const index = Object.fromEntries(
+  products.map((p) => [p.slug, { name: p.name, price: p.price, unit: p.unit, glyph: p.glyph }]),
+);
+---
+
+<BaseLayout
+  title="Your cart | DIY Bug Control"
+  description="Review the items in your cart."
+>
+  <div class="container">
+    <section class="section">
+      <div class="section-head">
+        <span class="eyebrow">Cart</span>
+        <h2>Your cart</h2>
+      </div>
+
+      <div class="notice panel" role="note">
+        <strong>Checkout is not wired up.</strong> This cart keeps state in your browser
+        so the flow can be reviewed end to end, but there is no payment processing behind
+        it and no order will be placed.
+      </div>
+
+      <div data-cart-empty hidden class="empty panel">
+        <p>Your cart is empty.</p>
+        <a class="btn btn-primary" href="/shop/">Browse products</a>
+      </div>
+
+      <div data-cart-filled hidden class="filled">
+        <ul class="lines" data-cart-lines></ul>
+        <div class="summary panel">
+          <div class="row">
+            <span>Subtotal</span>
+            <span class="tabular" data-cart-subtotal>$0.00</span>
+          </div>
+          <div class="row muted">
+            <span>Shipping</span>
+            <span>Calculated at checkout</span>
+          </div>
+          <div class="row total">
+            <span>Total</span>
+            <span class="tabular" data-cart-total>$0.00</span>
+          </div>
+          <button class="btn btn-accent btn-block" type="button" data-checkout>
+            Checkout
+          </button>
+          <a class="continue" href="/shop/">Continue shopping</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script is:inline define:vars={{ index }}>
+    (function () {
+      const KEY = 'dbc-cart';
+      const money = (n) =>
+        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
+
+      const read = () => {
+        try {
+          return JSON.parse(localStorage.getItem(KEY) ?? '{}');
+        } catch {
+          return {};
+        }
+      };
+      const write = (cart) => localStorage.setItem(KEY, JSON.stringify(cart));
+
+      const empty = document.querySelector('[data-cart-empty]');
+      const filled = document.querySelector('[data-cart-filled]');
+      const lines = document.querySelector('[data-cart-lines]');
+
+      function render() {
+        const cart = read();
+        const entries = Object.entries(cart).filter(([slug, qty]) => index[slug] && qty > 0);
+
+        empty.hidden = entries.length > 0;
+        filled.hidden = entries.length === 0;
+        if (entries.length === 0) return;
+
+        lines.textContent = '';
+        let subtotal = 0;
+
+        for (const [slug, qty] of entries) {
+          const item = index[slug];
+          subtotal += item.price * qty;
+
+          const li = document.createElement('li');
+          li.className = 'line';
+          li.innerHTML = `
+            <div class="line-copy">
+              <a class="line-name" href="/products/${slug}/"></a>
+              <span class="line-unit muted"></span>
+            </div>
+            <div class="qty" role="group">
+              <button type="button" class="qty-btn" data-dec="${slug}" aria-label="Decrease quantity">−</button>
+              <span class="qty-val tabular" aria-live="polite">${qty}</span>
+              <button type="button" class="qty-btn" data-inc="${slug}" aria-label="Increase quantity">+</button>
+            </div>
+            <span class="line-price tabular">${money(item.price * qty)}</span>
+            <button type="button" class="remove" data-remove="${slug}">Remove</button>
+          `;
+          li.querySelector('.line-name').textContent = item.name;
+          li.querySelector('.line-unit').textContent = item.unit;
+          lines.append(li);
+        }
+
+        document.querySelector('[data-cart-subtotal]').textContent = money(subtotal);
+        document.querySelector('[data-cart-total]').textContent = money(subtotal);
+      }
+
+      document.addEventListener('click', (event) => {
+        const el = event.target.closest('[data-inc],[data-dec],[data-remove],[data-checkout]');
+        if (!el) return;
+        const cart = read();
+
+        if (el.dataset.checkout !== undefined) {
+          alert('Checkout is not implemented on this demonstration site.');
+          return;
+        }
+        if (el.dataset.inc) cart[el.dataset.inc] = (cart[el.dataset.inc] ?? 0) + 1;
+        if (el.dataset.dec) {
+          const next = (cart[el.dataset.dec] ?? 0) - 1;
+          if (next <= 0) delete cart[el.dataset.dec];
+          else cart[el.dataset.dec] = next;
+        }
+        if (el.dataset.remove) delete cart[el.dataset.remove];
+
+        write(cart);
+        render();
+        document.querySelectorAll('[data-cart-count]').forEach((node) => {
+          const count = Object.values(read()).reduce((sum, n) => sum + n, 0);
+          node.textContent = String(count);
+          node.hidden = count === 0;
+        });
+      });
+
+      render();
+    })();
+  </script>
+</BaseLayout>
+
+<style>
+  .notice {
+    background: var(--color-surface-alt);
+    font-size: var(--text-small);
+    line-height: 1.55;
+  }
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+  .filled {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: 1fr minmax(240px, 320px);
+    align-items: start;
+  }
+  @media (max-width: 720px) {
+    .filled {
+      grid-template-columns: 1fr;
+    }
+  }
+  .lines {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  :global(.line) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+  :global(.line-copy) {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 140px;
+  }
+  :global(.line-name) {
+    font-weight: 700;
+    text-decoration: none;
+  }
+  :global(.line-name:hover) {
+    text-decoration: underline;
+  }
+  :global(.line-unit) {
+    font-size: var(--text-small);
+  }
+  :global(.qty) {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--color-border-interactive);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  :global(.qty-btn) {
+    min-width: var(--touch-target-min);
+    min-height: var(--touch-target-min);
+    border: 0;
+    background: transparent;
+    color: var(--color-foreground);
+    font-size: 1.15rem;
+    cursor: pointer;
+  }
+  :global(.qty-btn:hover) {
+    background: var(--color-surface-alt);
+  }
+  :global(.qty-val) {
+    min-width: 34px;
+    text-align: center;
+    font-weight: 700;
+  }
+  :global(.line-price) {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.15rem;
+    min-width: 76px;
+    text-align: right;
+  }
+  :global(.remove) {
+    min-height: var(--touch-target-min);
+    padding: 0 var(--space-3);
+    border: 0;
+    background: transparent;
+    color: var(--color-muted-foreground);
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  :global(.remove:hover) {
+    color: var(--color-destructive);
+  }
+
+  .summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    position: sticky;
+    top: 88px;
+  }
+  .summary .row {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    font-size: var(--text-small);
+  }
+  .summary .total {
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border);
+  }
+  .continue {
+    text-align: center;
+    font-size: var(--text-small);
+  }
+</style>

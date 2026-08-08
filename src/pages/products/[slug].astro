@@ -1,0 +1,571 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Glyph from '../../components/Glyph.astro';
+import StarRating from '../../components/StarRating.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import {
+  products,
+  relatedProducts,
+  getPest,
+  formatPrice,
+  type Product,
+} from '../../data/catalog';
+
+export function getStaticPaths() {
+  return products.map((product) => ({ params: { slug: product.slug }, props: { product } }));
+}
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const related = relatedProducts(product);
+const treats = product.pests.map((slug) => getPest(slug)).filter(Boolean);
+const breakdownLabels = [5, 4, 3, 2, 1];
+---
+
+<BaseLayout
+  title={`${product.name} — ${product.unit} | DIY Bug Control`}
+  description={product.summary}
+>
+  <div class="container">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/shop/">Shop</a></li>
+        <li aria-current="page">{product.name}</li>
+      </ol>
+    </nav>
+
+    <!-- Above the fold: product, aggregate rating, buy box -->
+    <section class="lede-grid">
+      <div class="art">
+        <Glyph name={product.glyph} size={120} />
+        {product.badge && <span class="badge">{product.badge}</span>}
+      </div>
+
+      <div class="buy">
+        <h1>{product.name}</h1>
+        <StarRating rating={product.rating} count={product.reviewCount} />
+        <p class="summary">{product.summary}</p>
+
+        <div class="price-row">
+          <span class="price tabular">{formatPrice(product.price)}</span>
+          <span class="unit muted">{product.unit}</span>
+        </div>
+
+        <p class="stock">
+          <span class:list={['dot', product.inStock ? 'in' : 'out']} aria-hidden="true"></span>
+          {product.inStock ? 'In stock — ships same day before 2pm' : 'Out of stock — restocking soon'}
+        </p>
+
+        <button
+          class="btn btn-accent btn-block"
+          type="button"
+          data-add-to-cart={product.slug}
+          data-product-name={product.name}
+          disabled={!product.inStock}
+        >
+          {product.inStock ? 'Add to cart' : 'Out of stock'}
+        </button>
+
+        {
+          treats.length > 0 && (
+            <div class="treats">
+              <span class="treats-label">Treats</span>
+              <ul>
+                {treats.map((pest) => (
+                  <li>
+                    <a href={`/pests/${pest!.slug}/`}>{pest!.name}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="detail-grid">
+        {
+          product.kills.length > 0 && (
+            <div class="panel">
+              <h2>What it kills</h2>
+              <ul class="plain">
+                {product.kills.map((k) => <li>{k}</li>)}
+              </ul>
+            </div>
+          )
+        }
+
+        <div class="panel">
+          <h2>Where to use it</h2>
+          <ul class="plain">
+            {product.useWhere.map((w) => <li>{w}</li>)}
+          </ul>
+          <p class="coverage">
+            <span class="muted">Coverage</span>
+            <strong>{product.coverage}</strong>
+          </p>
+        </div>
+
+        <div class="panel safety">
+          <h2>
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3l7.5 3.2v5c0 4.4-3.1 8.5-7.5 9.8-4.4-1.3-7.5-5.4-7.5-9.8v-5z" />
+              <path d="M12 9v4M12 16.2v.01" />
+            </svg>
+            Safety
+          </h2>
+          <ul class="plain">
+            {product.safety.map((s) => <li>{s}</li>)}
+          </ul>
+          <p class="label-note">
+            Read the product label in full before use. Label directions are the legal
+            instructions and override anything written here.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span class="eyebrow">Application</span>
+        <h2>How to apply it</h2>
+        <p>The sequence matters more than the product. Follow it in order.</p>
+      </div>
+      <ol class="apply">
+        {
+          product.applicationSteps.map((step, i) => (
+            <li>
+              <span class="apply-num tabular" aria-hidden="true">{i + 1}</span>
+              <span>{step}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span class="eyebrow">Reviews</span>
+        <h2>What customers report</h2>
+      </div>
+
+      <div class="review-layout">
+        <div class="panel breakdown">
+          <div class="agg">
+            <span class="agg-num tabular">{product.rating}</span>
+            <StarRating rating={product.rating} size={17} compact />
+            <span class="agg-count muted tabular">
+              {product.reviewCount.toLocaleString('en-US')} reviews
+            </span>
+          </div>
+          <ul class="bars">
+            {
+              product.ratingBreakdown.map((pct, i) => (
+                <li>
+                  <span class="bar-label tabular">{breakdownLabels[i]}★</span>
+                  <span class="track">
+                    <span class="fill" style={`width:${pct}%`}></span>
+                  </span>
+                  <span class="bar-pct tabular muted">{pct}%</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="review-list">
+          {
+            product.reviews.map((review) => (
+              <blockquote class="panel review">
+                <div class="review-head">
+                  <StarRating rating={review.rating} size={15} compact />
+                  <time datetime={review.date} class="muted">
+                    {new Date(review.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </time>
+                </div>
+                <h3>{review.title}</h3>
+                <p>{review.body}</p>
+                <footer class="review-foot">
+                  <span class="who">{review.author}</span>
+                  {review.verified && (
+                    <span class="verified">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M20 6 9 17l-5-5" />
+                      </svg>
+                      Verified purchase
+                    </span>
+                  )}
+                </footer>
+              </blockquote>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {
+      related.length > 0 && (
+        <section class="section">
+          <div class="section-head">
+            <span class="eyebrow">Often used together</span>
+            <h2>Related products</h2>
+          </div>
+          <div class="grid-auto">
+            {related.map((p) => (
+              <ProductCard product={p} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .crumbs {
+    padding-block: var(--space-6) var(--space-4);
+  }
+  .crumbs ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    font-size: var(--text-small);
+    color: var(--color-muted-foreground);
+  }
+  .crumbs li + li::before {
+    content: '/';
+    margin-right: var(--space-2);
+  }
+  .crumbs a {
+    color: var(--color-muted-foreground);
+  }
+
+  .lede-grid {
+    display: grid;
+    gap: var(--space-8);
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    align-items: start;
+    padding-bottom: var(--space-8);
+  }
+  .art {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(150deg, var(--color-surface-alt), var(--color-border));
+    border-radius: var(--radius-lg);
+    color: var(--color-primary);
+  }
+  .badge {
+    position: absolute;
+    top: var(--space-4);
+    left: var(--space-4);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-sm);
+  }
+
+  .buy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+  .buy h1 {
+    font-size: clamp(1.75rem, 4vw, 2.4rem);
+  }
+  .summary {
+    color: var(--color-muted-foreground);
+    line-height: 1.55;
+    max-width: var(--measure);
+  }
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+  .price {
+    font-family: var(--font-heading);
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .stock {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-small);
+    font-weight: 700;
+  }
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: var(--radius-full);
+  }
+  .dot.in {
+    background: var(--color-primary);
+  }
+  .dot.out {
+    background: var(--color-muted-foreground);
+  }
+  .btn[disabled] {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .treats {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    padding-top: var(--space-2);
+  }
+  .treats-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-muted-foreground);
+    font-weight: 700;
+  }
+  .treats ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .treats a {
+    display: inline-block;
+    padding: 5px var(--space-3);
+    border: 1px solid var(--color-border-interactive);
+    border-radius: var(--radius-full);
+    font-size: var(--text-small);
+    text-decoration: none;
+  }
+  .treats a:hover {
+    background: var(--color-surface-alt);
+    border-color: var(--color-primary);
+  }
+
+  .detail-grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    align-items: start;
+  }
+  .panel h2 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    font-size: 1.05rem;
+  }
+  .plain {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--text-small);
+    line-height: 1.5;
+  }
+  .plain li {
+    padding-left: var(--space-4);
+    position: relative;
+  }
+  .plain li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary);
+  }
+  .coverage {
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: var(--text-small);
+  }
+  .safety h2 {
+    color: var(--color-accent);
+  }
+  .safety .plain li::before {
+    background: var(--color-accent);
+  }
+  .label-note {
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--color-muted-foreground);
+  }
+
+  .apply {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-width: var(--measure);
+  }
+  .apply li {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    line-height: 1.55;
+  }
+  .apply-num {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .review-layout {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: minmax(240px, 300px) 1fr;
+    align-items: start;
+  }
+  @media (max-width: 720px) {
+    .review-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+  .breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    position: sticky;
+    top: 88px;
+  }
+  .agg {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+  .agg-num {
+    font-family: var(--font-heading);
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .agg-count {
+    font-size: var(--text-small);
+  }
+  .bars {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .bars li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-small);
+  }
+  .bar-label {
+    width: 30px;
+    flex: none;
+  }
+  .track {
+    flex: 1;
+    height: 9px;
+    border-radius: var(--radius-full);
+    background: var(--color-border);
+    overflow: hidden;
+  }
+  .fill {
+    display: block;
+    height: 100%;
+    background: var(--color-star);
+    border-radius: var(--radius-full);
+  }
+  .bar-pct {
+    width: 38px;
+    text-align: right;
+    flex: none;
+  }
+
+  .review-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .review {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .review-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    font-size: 0.8rem;
+  }
+  .review h3 {
+    font-size: 1rem;
+  }
+  .review p {
+    line-height: 1.6;
+    color: var(--color-muted-foreground);
+  }
+  .review-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: 0.8rem;
+  }
+  .who {
+    font-weight: 700;
+  }
+  .verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+</style>

@@ -1,0 +1,68 @@
+---
+interface Props {
+  rating: number;
+  count?: number;
+  size?: number;
+  /** Hide the numeric text, e.g. inside a dense card. */
+  compact?: boolean;
+}
+
+const { rating, count, size = 16, compact = false } = Astro.props;
+const rounded = Math.round(rating * 2) / 2;
+const label =
+  count !== undefined
+    ? `Rated ${rating} out of 5 from ${count.toLocaleString('en-US')} reviews`
+    : `Rated ${rating} out of 5`;
+---
+
+<span class="stars">
+  <span class="glyphs" aria-hidden="true">
+    {
+      [1, 2, 3, 4, 5].map((i) => {
+        const fill = rounded >= i ? 'full' : rounded >= i - 0.5 ? 'half' : 'empty';
+        return (
+          <svg width={size} height={size} viewBox="0 0 24 24" class={`star ${fill}`}>
+            <defs>
+              <linearGradient id={`half-${i}-${rating}`}>
+                <stop offset="50%" stop-color="var(--color-star)" />
+                <stop offset="50%" stop-color="transparent" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M12 2.6l2.9 5.9 6.5.95-4.7 4.6 1.1 6.5L12 17.5 6.2 20.5l1.1-6.5-4.7-4.6 6.5-.95z"
+              fill={fill === 'full' ? 'var(--color-star)' : fill === 'half' ? `url(#half-${i}-${rating})` : 'transparent'}
+              stroke="var(--color-star)"
+              stroke-width="1.2"
+              stroke-linejoin="round"
+            />
+          </svg>
+        );
+      })
+    }
+  </span>
+  {
+    !compact && (
+      <span class="text tabular">
+        {rating}
+        {count !== undefined && <span class="muted"> · {count.toLocaleString('en-US')} reviews</span>}
+      </span>
+    )
+  }
+  <span class="visually-hidden">{label}</span>
+</span>
+
+<style>
+  .stars {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .glyphs {
+    display: inline-flex;
+    gap: 1px;
+  }
+  .text {
+    font-size: var(--text-small);
+    font-weight: 700;
+  }
+</style>

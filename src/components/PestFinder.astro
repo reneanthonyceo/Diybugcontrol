@@ -1,0 +1,88 @@
+---
+import Glyph from './Glyph.astro';
+import { pests } from '../data/catalog';
+
+interface Props {
+  /** Slug to mark as current, when rendered on a pest page. */
+  current?: string;
+  heading?: string;
+}
+
+const { current, heading } = Astro.props;
+---
+
+<nav class="finder" aria-label="Find products by pest">
+  {heading && <h2 class="finder-heading">{heading}</h2>}
+  <ul class="grid">
+    {
+      pests.map((pest) => (
+        <li>
+          <a
+            href={`/pests/${pest.slug}/`}
+            class:list={['tile', { current: pest.slug === current }]}
+            aria-current={pest.slug === current ? 'page' : undefined}
+          >
+            <Glyph name={pest.glyph} size={34} />
+            <span class="label">{pest.shortName}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .finder {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .finder-heading {
+    font-size: var(--text-h3);
+  }
+  .grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+    grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  }
+  .tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 104px;
+    padding: var(--space-3);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-foreground);
+    text-decoration: none;
+    text-align: center;
+    transition:
+      border-color var(--duration-hover) var(--ease-out),
+      background-color var(--duration-hover) var(--ease-out),
+      transform var(--duration-card) var(--ease-out);
+  }
+  .tile:hover {
+    border-color: var(--color-primary);
+    background: var(--color-surface-alt);
+    transform: translateY(-2px);
+  }
+  .tile :global(svg) {
+    color: var(--color-primary);
+  }
+  .tile.current {
+    border-color: var(--color-primary);
+    border-width: 2px;
+    background: var(--color-surface-alt);
+  }
+  .label {
+    font-size: var(--text-small);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+</style>
