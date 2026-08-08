@@ -15,10 +15,15 @@
         "eyebrow": "Reviews",
         "heading": "What customers report"
       }
+    },
+    "documents": {
+      "type": "product-documents",
+      "settings": {}
     }
   },
   "order": [
     "main",
+    "documents",
     "reviews"
   ]
 }

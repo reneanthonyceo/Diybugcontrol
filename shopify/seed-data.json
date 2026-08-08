@@ -77,7 +77,7 @@
       "name": "Bed bugs",
       "shortName": "Bed bugs",
       "glyph": "bedbug",
-      "tagline": "Slow, methodical, and entirely doable — but not in one pass.",
+      "tagline": "Slow, methodical, and entirely doable \u2014 but not in one pass.",
       "signs": [
         "Rust-colored spotting along mattress seams",
         "Bites in a line or cluster, often on arms and shoulders",
@@ -308,7 +308,7 @@
       "applicationSteps": [
         "Place pea-sized dots every 12 inches along cracks and corners.",
         "Concentrate placements within 10 feet of food and water sources.",
-        "Do not spray insecticide near bait — it repels roaches away from it.",
+        "Do not spray insecticide near bait \u2014 it repels roaches away from it.",
         "Check placements at 7 days and re-apply where bait has been consumed."
       ],
       "safety": [
@@ -354,7 +354,8 @@
           "verified": true,
           "pest": "cockroaches"
         }
-      ]
+      ],
+      "type": "Bait"
     },
     {
       "slug": "ant-bait-stations",
@@ -381,7 +382,7 @@
       "coverage": "8 stations covers a typical single-family home",
       "applicationSteps": [
         "Place stations directly on the active trail, not where you want the ants to go.",
-        "Do not clean the trail before placing — the pheromone path is what carries bait home.",
+        "Do not clean the trail before placing \u2014 the pheromone path is what carries bait home.",
         "Expect activity to increase for 2 to 3 days.",
         "Replace stations when the bait reservoir is empty."
       ],
@@ -418,7 +419,8 @@
           "verified": true,
           "pest": "ants"
         }
-      ]
+      ],
+      "type": "Bait"
     },
     {
       "slug": "bed-bug-spray",
@@ -492,7 +494,8 @@
           "verified": true,
           "pest": "bed-bugs"
         }
-      ]
+      ],
+      "type": "Spray"
     },
     {
       "slug": "snap-trap-kit",
@@ -519,7 +522,7 @@
       "applicationSteps": [
         "Place traps perpendicular to the wall with the trigger end touching it.",
         "Use six traps, not one. Under-trapping is the most common reason this fails.",
-        "Bait with a pea-sized amount — a large bait lets them feed without triggering.",
+        "Bait with a pea-sized amount \u2014 a large bait lets them feed without triggering.",
         "Leave traps unset for two nights first if activity is low, then set them."
       ],
       "safety": [
@@ -556,7 +559,8 @@
           "verified": true,
           "pest": "mice-and-rats"
         }
-      ]
+      ],
+      "type": "Trap"
     },
     {
       "slug": "mosquito-fogger-concentrate",
@@ -581,7 +585,7 @@
       ],
       "coverage": "Up to 5,000 sq ft per bottle",
       "applicationSteps": [
-        "Dump every container of standing water before treating — this matters more than the spray.",
+        "Dump every container of standing water before treating \u2014 this matters more than the spray.",
         "Dilute per the label and apply to the underside of foliage where adults rest.",
         "Treat in early morning or evening, not midday heat.",
         "Reapply after heavy rain."
@@ -620,7 +624,8 @@
           "verified": true,
           "pest": "mosquitoes"
         }
-      ]
+      ],
+      "type": "Concentrate"
     },
     {
       "slug": "termite-foam",
@@ -645,7 +650,7 @@
       ],
       "coverage": "Treats approximately 30 linear feet of active tubing",
       "applicationSteps": [
-        "Confirm you have termites and not flying ants — the wings differ in length.",
+        "Confirm you have termites and not flying ants \u2014 the wings differ in length.",
         "Inject foam directly into active tubes and gallery openings.",
         "Allow foam to expand and fill the void fully.",
         "Schedule a professional inspection to assess structural damage."
@@ -675,7 +680,8 @@
           "verified": true,
           "pest": "termites"
         }
-      ]
+      ],
+      "type": "Foam"
     },
     {
       "slug": "perimeter-concentrate",
@@ -756,7 +762,8 @@
           "verified": true,
           "pest": "ants"
         }
-      ]
+      ],
+      "type": "Concentrate"
     },
     {
       "slug": "insect-growth-regulator",
@@ -812,7 +819,8 @@
           "verified": true,
           "pest": "cockroaches"
         }
-      ]
+      ],
+      "type": "IGR"
     },
     {
       "slug": "pump-sprayer",
@@ -862,7 +870,8 @@
           "body": "Third sprayer I have owned and the first where the seal did not go soft after a season of concentrate.",
           "verified": true
         }
-      ]
+      ],
+      "type": "Equipment"
     },
     {
       "slug": "glue-board-monitors",
@@ -920,7 +929,8 @@
           "verified": true,
           "pest": "cockroaches"
         }
-      ]
+      ],
+      "type": "Trap"
     },
     {
       "slug": "flea-carpet-powder",
@@ -946,7 +956,7 @@
       ],
       "coverage": "Up to 800 sq ft",
       "applicationSteps": [
-        "Treat the pet first with a veterinary product — this step is not optional.",
+        "Treat the pet first with a veterinary product \u2014 this step is not optional.",
         "Vacuum thoroughly, then discard the bag outside.",
         "Sprinkle evenly and work into the fiber with a broom.",
         "Leave 30 minutes, vacuum again, and repeat in two weeks."
@@ -976,7 +986,8 @@
           "verified": true,
           "pest": "fleas"
         }
-      ]
+      ],
+      "type": "Dust"
     },
     {
       "slug": "diatomaceous-earth-kit",
@@ -1003,7 +1014,7 @@
       ],
       "coverage": "Up to 2,000 sq ft",
       "applicationSteps": [
-        "Apply a thin film — a visible pile is one insects walk around.",
+        "Apply a thin film \u2014 a visible pile is one insects walk around.",
         "Target voids and cracks rather than open surfaces.",
         "Keep dry. It stops working entirely once damp.",
         "Reapply after any moisture exposure."
@@ -1035,7 +1046,8 @@
           "verified": true,
           "pest": "cockroaches"
         }
-      ]
+      ],
+      "type": "Dust"
     }
   ]
 }

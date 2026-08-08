@@ -50,7 +50,13 @@
     },
     "reviews_empty": "Add your review app's block to this section from the theme editor to show customer reviews here.",
     "in_stock": "In stock",
-    "sku": "Item {{ sku }}"
+    "sku": "Item {{ sku }}",
+    "documents": "Label and safety documents",
+    "doc_label": "Product label (PDF)",
+    "doc_label_note": "Directions for use and precautions",
+    "doc_sds": "Safety data sheet (PDF)",
+    "doc_sds_note": "Hazard and first-aid information",
+    "doc_epa": "EPA registration number"
   },
   "collection": {
     "empty": "No products in this collection yet.",

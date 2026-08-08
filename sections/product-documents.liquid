@@ -1,0 +1,116 @@
+{% comment %}
+  Product documents — the registered label, the SDS, and the EPA registration
+  number.
+
+  Not decoration. A pesticide buyer is entitled to the label and safety data
+  sheet before purchase, and the label is the legal instruction set that the
+  marketing copy on this page cannot replace. Renders nothing when a product
+  carries no documents, so non-pesticide items (sprayers, traps) stay clean.
+{% endcomment %}
+
+{%- liquid
+  assign label = product.metafields.dbc.label_pdf.value
+  assign sds = product.metafields.dbc.sds_pdf.value
+  assign epa = product.metafields.dbc.epa_reg_no.value
+-%}
+
+{%- if label != blank or sds != blank or epa != blank -%}
+  <div class="container">
+    <section class="section">
+      <div class="doc-panel">
+        <h2 class="doc-heading">{{ 'product.documents' | t }}</h2>
+
+        <div class="doc-row">
+          {%- if label != blank -%}
+            <a class="doc-link" href="{{ label.url }}" download>
+              {% render 'doc-icon' %}
+              <span>
+                <strong>{{ 'product.doc_label' | t }}</strong>
+                <span class="doc-note">{{ 'product.doc_label_note' | t }}</span>
+              </span>
+            </a>
+          {%- endif -%}
+
+          {%- if sds != blank -%}
+            <a class="doc-link" href="{{ sds.url }}" download>
+              {% render 'doc-icon' %}
+              <span>
+                <strong>{{ 'product.doc_sds' | t }}</strong>
+                <span class="doc-note">{{ 'product.doc_sds_note' | t }}</span>
+              </span>
+            </a>
+          {%- endif -%}
+
+          {%- if epa != blank -%}
+            <p class="doc-epa">
+              <span class="doc-note">{{ 'product.doc_epa' | t }}</span>
+              <strong class="tabular">{{ epa }}</strong>
+            </p>
+          {%- endif -%}
+        </div>
+      </div>
+    </section>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .doc-panel {
+    border: 1px solid var(--color-hairline);
+    border-left: 4px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-alt);
+    padding: var(--space-5);
+  }
+  .doc-heading {
+    font-size: 1.05rem;
+    margin-bottom: var(--space-4);
+  }
+  .doc-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    align-items: center;
+  }
+  .doc-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: var(--touch-target-min);
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-card);
+    border: 1px solid var(--color-border-interactive);
+    border-radius: var(--radius-sm);
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+  .doc-link:hover {
+    border-color: var(--color-primary);
+    background: var(--color-card);
+  }
+  .doc-link > span {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+  }
+  .doc-note {
+    font-size: 0.76rem;
+    color: var(--color-muted-foreground);
+  }
+  .doc-epa {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+    font-size: 0.9rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product documents",
+  "tag": "section",
+  "settings": [],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

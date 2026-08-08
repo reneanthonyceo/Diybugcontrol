@@ -47,6 +47,30 @@ This creates:
 Products land as draft deliberately. Review the label copy before publishing —
 see the warning below.
 
+### Sub-collections and menus
+
+The seed also creates **smart sub-collections** for every pest and product-type
+pair that has stock — Roaches Bait, Roaches Dust, Ants Concentrate, and so on.
+They are rule-based (`product type = Bait` AND `tag = cockroaches`), so filing a
+new product under the right type and pest tag adds it automatically. No manual
+curation.
+
+The sidebar and category tile row need a menu per pest. `npm run seed` prints
+the exact structure to build under **Content → Menus** at the end of its run.
+Then assign each pest menu to its collection under **Customize → Collection →
+Product grid → Sidebar categories**.
+
+### Label and SDS documents
+
+Product pages carry a documents panel reading `dbc.label_pdf`, `dbc.sds_pdf`,
+and `dbc.epa_reg_no`. Upload the PDFs under **Content → Files** and attach them
+per product. The panel hides itself when a product has no documents, so
+sprayers and traps stay clean.
+
+This is not optional furniture for pesticide products — a buyer is entitled to
+the registered label and safety data sheet, and the label is the legal
+instruction set the page copy cannot replace.
+
 ## 3. Push the theme
 
 ```bash

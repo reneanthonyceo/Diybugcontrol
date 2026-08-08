@@ -232,8 +232,9 @@ async function createProducts(collectionsBySlug) {
           handle: product.slug,
           descriptionHtml: `<p>${product.summary}</p>`,
           status: 'DRAFT',
-          productType: 'Pest control',
+          productType: product.type ?? 'Pest control',
           vendor: 'DIY Bug Control',
+          tags: product.pests,
           metafields,
           ...(collectionIds.length ? { collectionsToJoin: collectionIds } : {}),
         },
@@ -274,6 +275,91 @@ async function createProducts(collectionsBySlug) {
     );
     assertNoUserErrors(priced?.productVariantsBulkUpdate, `${product.slug} price`);
   }
+}
+
+/* Sub-collections ------------------------------------------------------ */
+
+/**
+ * A shopper narrows from "roaches" to "roach bait" before comparing SKUs, so
+ * each pest needs product-type children. These are smart collections keyed on
+ * product type AND the pest tag, which means adding a product to the right
+ * type and tag files it automatically — no manual curation.
+ */
+async function createSubCollections() {
+  const pairs = new Map();
+  for (const product of products) {
+    if (!product.type) continue;
+    for (const pest of product.pests) {
+      if (!pairs.has(pest)) pairs.set(pest, new Set());
+      pairs.get(pest).add(product.type);
+    }
+  }
+
+  const menu = [];
+
+  for (const pest of pests) {
+    const kinds = [...(pairs.get(pest.slug) ?? [])].sort();
+    if (kinds.length === 0) continue;
+
+    const children = [];
+    for (const kind of kinds) {
+      const title = `${pest.shortName} ${kind}`;
+      const handle = `${pest.slug}-${kind.toLowerCase()}`;
+      console.log(`sub-collection: ${title}`);
+
+      const data = await gql(
+        `mutation Create($input: CollectionInput!) {
+          collectionCreate(input: $input) {
+            collection { id handle }
+            userErrors { field message }
+          }
+        }`,
+        {
+          input: {
+            title,
+            handle,
+            ruleSet: {
+              appliedDisjunctively: false,
+              rules: [
+                { column: 'TYPE', relation: 'EQUALS', condition: kind },
+                { column: 'TAG', relation: 'EQUALS', condition: pest.slug },
+              ],
+            },
+          },
+        },
+      );
+      assertNoUserErrors(data?.collectionCreate, handle);
+      children.push({ title, handle });
+    }
+
+    menu.push({ pest: pest.name, handle: pest.slug, children });
+  }
+
+  return menu;
+}
+
+/**
+ * Menus cannot be created reliably across API versions, so print the structure
+ * for the merchant to build once under Content -> Menus.
+ */
+function printMenuPlan(menu) {
+  console.log('\n== Menu structure to create ==');
+  console.log('Content -> Menus -> Add menu, handle "main-menu":\n');
+  console.log('  Shop by pest');
+  for (const entry of menu) {
+    console.log(`    ${entry.pest}  ->  /collections/${entry.handle}`);
+  }
+  console.log('\nThen one sidebar menu per pest, handle matching the pest:\n');
+  for (const entry of menu) {
+    console.log(`  Menu "${entry.handle}":`);
+    for (const child of entry.children) {
+      console.log(`    ${child.title}  ->  /collections/${child.handle}`);
+    }
+  }
+  console.log(
+    '\nAssign each pest menu to its collection template under' +
+      '\nCustomize -> Collection -> Product grid -> Sidebar categories.',
+  );
 }
 
 /* Guides --------------------------------------------------------------- */
@@ -361,8 +447,13 @@ async function main() {
   console.log('\n== Products ==');
   await createProducts(collections);
 
+  console.log('\n== Sub-collections ==');
+  const menu = await createSubCollections();
+
   console.log('\n== Guides ==');
   await createGuides();
+
+  printMenuPlan(menu);
 
   console.log(
     '\nDone. Products and articles were created unpublished — review the label' +

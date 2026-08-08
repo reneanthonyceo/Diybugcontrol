@@ -6,11 +6,27 @@
       "name": "Treatment step",
       "displayNameKey": "title",
       "fieldDefinitions": [
-        { "key": "title", "name": "Title", "type": "single_line_text_field", "required": true },
-        { "key": "detail", "name": "Detail", "type": "multi_line_text_field", "required": true }
+        {
+          "key": "title",
+          "name": "Title",
+          "type": "single_line_text_field",
+          "required": true
+        },
+        {
+          "key": "detail",
+          "name": "Detail",
+          "type": "multi_line_text_field",
+          "required": true
+        }
       ],
-      "access": { "storefront": "PUBLIC_READ" },
-      "capabilities": { "publishable": { "enabled": true } }
+      "access": {
+        "storefront": "PUBLIC_READ"
+      },
+      "capabilities": {
+        "publishable": {
+          "enabled": true
+        }
+      }
     }
   ],
   "productDefinitions": [
@@ -82,6 +98,39 @@
       "namespace": "dbc",
       "type": "list.single_line_text_field",
       "description": "Precautionary statements. Must match the registered product label."
+    },
+    {
+      "key": "label_pdf",
+      "name": "Product label (PDF)",
+      "namespace": "dbc",
+      "type": "file_reference",
+      "description": "The registered product label. Required reading for the customer and expected on any pesticide product page.",
+      "validations": [
+        {
+          "name": "file_type_options",
+          "value": "[\"Document\"]"
+        }
+      ]
+    },
+    {
+      "key": "sds_pdf",
+      "name": "Safety data sheet (PDF)",
+      "namespace": "dbc",
+      "type": "file_reference",
+      "description": "SDS from the manufacturer. Must be available to purchasers.",
+      "validations": [
+        {
+          "name": "file_type_options",
+          "value": "[\"Document\"]"
+        }
+      ]
+    },
+    {
+      "key": "epa_reg_no",
+      "name": "EPA registration number",
+      "namespace": "dbc",
+      "type": "single_line_text_field",
+      "description": "EPA registration number from the label, e.g. 432-1234."
     }
   ],
   "collectionDefinitions": [
@@ -132,7 +181,12 @@
       "namespace": "dbc",
       "type": "list.metaobject_reference",
       "description": "Ordered treatment_step metaobjects.",
-      "validations": [{ "name": "metaobject_definition_type", "value": "treatment_step" }]
+      "validations": [
+        {
+          "name": "metaobject_definition_type",
+          "value": "treatment_step"
+        }
+      ]
     }
   ]
 }
