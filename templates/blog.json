@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "settings": {
+        "eyebrow": "Guides",
+        "body": "Product choice matters less than most people expect. Placement, timing, and follow-up are what separate a fix from a cycle.",
+        "per_page": 12
+      }
+    }
+  },
+  "order": ["main"]
+}

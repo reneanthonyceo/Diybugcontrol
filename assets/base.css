@@ -517,6 +517,14 @@ a { color: var(--color-primary); }
   font-size: 0.85rem;
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
 /* Rich text (merchant-authored) ---------------------------------------- */
 .rte p { margin-bottom: var(--space-4); }
 .rte p:last-child { margin-bottom: 0; }

@@ -44,8 +44,10 @@
       "count": {
         "one": "{{ count }} review",
         "other": "{{ count }} reviews"
-      }
-    }
+      },
+      "scale": "Out of {{ max }}"
+    },
+    "reviews_empty": "Add your review app's block to this section from the theme editor to show customer reviews here."
   },
   "collection": {
     "empty": "No products in this collection yet.",
@@ -66,5 +68,8 @@
     "checkout": "Checkout",
     "remove": "Remove",
     "quantity_for": "Quantity for {{ title }}"
+  },
+  "blog": {
+    "empty": "No guides published yet."
   }
 }

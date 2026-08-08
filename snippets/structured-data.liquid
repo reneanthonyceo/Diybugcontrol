@@ -1,0 +1,90 @@
+{% comment %}
+  JSON-LD structured data.
+
+  Worth the markup on this store specifically: pest landing pages are the
+  acquisition channel, and review stars in search results move click-through on
+  exactly the kind of query these pages target.
+
+  Every interpolated string goes through the `json` filter, which handles
+  escaping — building JSON by hand with quotes around a Liquid tag breaks the
+  moment a product title contains an apostrophe.
+
+  Accepts:
+  - type {String} 'product' or 'article'
+
+  Usage: {% render 'structured-data', type: 'product' %}
+{% endcomment %}
+
+{%- case type -%}
+  {%- when 'product' -%}
+    {%- liquid
+      assign rating_data = product.metafields.reviews.rating.value
+      assign rating_count = product.metafields.reviews.rating_count.value
+      assign has_rating = false
+      if rating_data != blank and rating_count > 0
+        assign has_rating = true
+      endif
+      assign variant = product.selected_or_first_available_variant
+      if product.available
+        assign availability = 'https://schema.org/InStock'
+      else
+        assign availability = 'https://schema.org/OutOfStock'
+      endif
+    -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": {{ product.title | json }},
+        "description": {{ product.metafields.dbc.summary.value | default: product.description | strip_html | truncate: 300 | json }},
+        "url": {{ request.origin | append: product.url | json }},
+        "sku": {{ variant.sku | default: product.handle | json }},
+        "brand": {
+          "@type": "Brand",
+          "name": {{ product.vendor | default: shop.name | json }}
+        },
+        {%- if product.featured_media %}
+          "image": {{ product.featured_media | image_url: width: 1200 | prepend: 'https:' | json }},
+        {%- endif %}
+        {%- if has_rating %}
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": {{ rating_data.rating | json }},
+            "reviewCount": {{ rating_count | json }},
+            "bestRating": {{ rating_data.scale_max | json }},
+            "worstRating": {{ rating_data.scale_min | json }}
+          },
+        {%- endif %}
+        "offers": {
+          "@type": "Offer",
+          "price": {{ variant.price | divided_by: 100.0 | json }},
+          "priceCurrency": {{ cart.currency.iso_code | json }},
+          "availability": {{ availability | json }},
+          "url": {{ request.origin | append: product.url | json }}
+        }
+      }
+    </script>
+
+  {%- when 'article' -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": {{ article.title | json }},
+        "url": {{ request.origin | append: article.url | json }},
+        "datePublished": {{ article.published_at | date: '%Y-%m-%d' | json }},
+        "description": {{ article.excerpt_or_content | strip_html | truncate: 300 | json }},
+        {%- if article.image %}
+          "image": {{ article.image | image_url: width: 1200 | prepend: 'https:' | json }},
+        {%- endif %}
+        "author": {
+          "@type": "Organization",
+          "name": {{ shop.name | json }}
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": {{ shop.name | json }}
+        }
+      }
+    </script>
+{%- endcase -%}

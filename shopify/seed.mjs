@@ -36,6 +36,7 @@ if (!DRY_RUN && (!STORE || !TOKEN)) {
 
 const defs = JSON.parse(readFileSync(join(HERE, 'metafield-definitions.json'), 'utf8'));
 const { pests, products } = JSON.parse(readFileSync(join(HERE, 'seed-data.json'), 'utf8'));
+const guides = JSON.parse(readFileSync(join(HERE, 'seed-guides.json'), 'utf8'));
 
 /** Minimal Admin GraphQL client with useful error surfacing. */
 async function gql(query, variables = {}) {
@@ -275,6 +276,70 @@ async function createProducts(collectionsBySlug) {
   }
 }
 
+/* Guides --------------------------------------------------------------- */
+
+async function createGuides() {
+  console.log(`blog: ${guides.blog.title}`);
+
+  const created = await gql(
+    `mutation Create($blog: BlogCreateInput!) {
+      blogCreate(blog: $blog) {
+        blog { id handle }
+        userErrors { field message }
+      }
+    }`,
+    {
+      blog: {
+        title: guides.blog.title,
+        handle: guides.blog.handle,
+      },
+    },
+  );
+  assertNoUserErrors(created?.blogCreate, guides.blog.handle);
+
+  let blogId = created?.blogCreate?.blog?.id;
+
+  // On a re-run the handle is taken, so look the existing blog up instead.
+  if (!blogId && !DRY_RUN) {
+    const found = await gql(
+      `query FindBlog($query: String!) {
+        blogs(first: 1, query: $query) { nodes { id } }
+      }`,
+      { query: `handle:${guides.blog.handle}` },
+    );
+    blogId = found?.blogs?.nodes?.[0]?.id;
+  }
+
+  if (!blogId && !DRY_RUN) {
+    console.log('  · could not resolve the blog, skipping articles');
+    return;
+  }
+
+  for (const article of guides.articles) {
+    console.log(`article: ${article.title}`);
+    const result = await gql(
+      `mutation Create($article: ArticleCreateInput!) {
+        articleCreate(article: $article) {
+          article { id handle }
+          userErrors { field message }
+        }
+      }`,
+      {
+        article: {
+          blogId,
+          title: article.title,
+          handle: article.handle,
+          body: article.body,
+          summary: article.summary,
+          isPublished: false,
+          author: { name: guides.blog.title },
+        },
+      },
+    );
+    assertNoUserErrors(result?.articleCreate, article.handle);
+  }
+}
+
 /* Run ------------------------------------------------------------------ */
 
 async function main() {
@@ -296,7 +361,13 @@ async function main() {
   console.log('\n== Products ==');
   await createProducts(collections);
 
-  console.log('\nDone. Products were created as DRAFT — review the label copy, then publish.');
+  console.log('\n== Guides ==');
+  await createGuides();
+
+  console.log(
+    '\nDone. Products and articles were created unpublished — review the label' +
+      '\nand efficacy copy, then publish.',
+  );
 }
 
 main().catch((error) => {

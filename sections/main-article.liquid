@@ -1,0 +1,119 @@
+{% render 'structured-data', type: 'article' %}
+
+<div class="container">
+  <nav class="crumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+    <ol>
+      <li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li>
+      <li><a href="{{ blog.url }}">{{ blog.title }}</a></li>
+      <li aria-current="page">{{ article.title }}</li>
+    </ol>
+  </nav>
+
+  <article class="section article">
+    <header class="article-head">
+      <span class="eyebrow">{{ blog.title }}</span>
+      <h1>{{ article.title }}</h1>
+      <time class="muted" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+        {{ article.published_at | date: '%B %-d, %Y' }}
+      </time>
+    </header>
+
+    {%- if article.image -%}
+      <div class="article-image">
+        {{
+          article.image
+          | image_url: width: 1200
+          | image_tag:
+            loading: 'eager',
+            widths: '600, 900, 1200',
+            sizes: '(min-width: 1180px) 1100px, 92vw',
+            alt: article.image.alt | default: article.title
+        }}
+      </div>
+    {%- endif -%}
+
+    <div class="rte prose article-body">{{ article.content }}</div>
+
+    {%- if section.settings.related_collection != blank -%}
+      {%- assign related = section.settings.related_collection -%}
+      {%- if related.products.size > 0 -%}
+        <aside class="article-related">
+          <div class="section-head">
+            <span class="eyebrow">{{ section.settings.related_eyebrow }}</span>
+            <h2>{{ section.settings.related_heading }}</h2>
+          </div>
+          <div class="grid-auto">
+            {%- for product in related.products limit: 4 -%}
+              {% render 'product-card', product: product %}
+            {%- endfor -%}
+          </div>
+        </aside>
+      {%- endif -%}
+    {%- endif -%}
+  </article>
+</div>
+
+{% stylesheet %}
+  .article { gap: var(--space-6); }
+  .article-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: var(--measure);
+  }
+  .article-head h1 {
+    font-size: var(--text-display);
+    line-height: 1.1;
+  }
+  .article-image {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .article-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .article-body {
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+  .article-related {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "related_eyebrow",
+      "label": "Related eyebrow",
+      "default": "What you'll need"
+    },
+    {
+      "type": "text",
+      "id": "related_heading",
+      "label": "Related heading",
+      "default": "Products for this"
+    },
+    {
+      "type": "collection",
+      "id": "related_collection",
+      "label": "Related collection",
+      "info": "Shown at the end of the article. Point this at the relevant pest collection."
+    }
+  ],
+  "enabled_on": {
+    "templates": ["article"]
+  }
+}
+{% endschema %}

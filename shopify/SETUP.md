@@ -64,15 +64,38 @@ The header reads a link list named `main-menu`; the footer blocks read
 
 ## 5. Reviews
 
-The theme reads Shopify's standard `reviews.rating` and `reviews.rating_count`
-metafields, which Judge.me, Okendo, and Shopify Product Reviews all write to.
-Install a review app and ratings appear on cards and product pages
-automatically. With no app installed the star rating renders nothing rather than
-an empty five-star row — an unrated product should not look like a zero-star
-one.
+Two halves, and they are independent.
 
-Individual review bodies are not rendered by this theme; review apps supply
-their own blocks for that.
+**The rating summary** is read from Shopify's standard `reviews.rating` and
+`reviews.rating_count` metafields, which Judge.me, Okendo, Yotpo, Loox, and
+Shopify's own review app all write to. Install any of them and stars appear on
+product cards, in the product page summary, and in the JSON-LD `aggregateRating`
+— no configuration. With nothing installed, the star rating renders nothing
+rather than an empty five-star row, because an unrated product should not look
+like a zero-star one.
+
+**Individual reviews** come from the app's own block. The `product-reviews`
+section accepts `@app` blocks, so:
+
+1. Install your review app
+2. **Online Store → Themes → Customize → Products**
+3. Select the **Product reviews** section
+4. **Add block** → pick the app's review block
+
+Switching vendors later is a theme-editor change, not a code change. That is the
+reason the section takes app blocks instead of hardcoding one vendor's snippet.
+
+## 6. Guides
+
+`npm run seed` creates a **Guides** blog with six articles, all **unpublished**.
+
+Point each article at its relevant pest collection so the related-products strip
+at the end has something to show: **Customize → Article →** set **Related
+collection**. This is per-template rather than per-article, so if you want
+different products per guide, create article templates
+(`article.roaches.json`, etc.) and assign them.
+
+Add the blog to your main menu once the articles are reviewed and published.
 
 ---
 
@@ -90,6 +113,10 @@ registered product label before anything is published:
 | `dbc.safety` | Precautionary statements are legally prescribed wording |
 | `dbc.application_steps` | Directions for use are legally prescribed |
 | `dbc.coverage` | Application rate claims |
+
+The six seeded guide articles describe general technique rather than specific
+products, so they carry less regulatory exposure than label copy — but they do
+make efficacy claims and are also placeholder. Review them before publishing.
 
 In the US, pesticide labelling is regulated under FIFRA and it is unlawful to
 sell or distribute a pesticide with claims that differ from its registered

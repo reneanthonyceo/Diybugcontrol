@@ -19,7 +19,7 @@ locales/        en.default.json
 sections/       header, footer, hero, pest-finder, product, collection, cart, …
 snippets/       product-card, star-rating, glyph, metafield-list
 templates/      JSON templates, including collection.pest.json
-shopify/        metafield definitions, seed script, store setup guide
+shopify/        metafield definitions, seed script, guide content, setup
 design-system/  tokens, contrast verification, visual swatch reference
 reference/      earlier Astro prototype, kept for reference only
 ```
@@ -74,6 +74,39 @@ Every colour pair in `assets/base.css` is contrast-verified; the measurements
 are recorded in MASTER.md §3. The palette deliberately departs from the one the
 design generator produced, which targeted 3:1 and failed AA for normal-size
 button text.
+
+## Reviews
+
+Ratings and review content are handled separately, on purpose.
+
+The **rating summary** — stars on cards, the aggregate on product pages, and the
+JSON-LD `aggregateRating` — reads Shopify's standard `reviews.rating` and
+`reviews.rating_count` metafields. Every major review app writes to those, so
+installing one lights all three up with no configuration. With no app installed,
+the star component renders nothing rather than an empty five-star row.
+
+**Review content** comes from the app's own block. `sections/product-reviews.liquid`
+accepts `@app` blocks, so Judge.me, Okendo, Yotpo, or Loox drop in from the theme
+editor. Hardcoding one vendor's snippet would make switching a code change; this
+way it is a drag and drop.
+
+## Guides
+
+`shopify/seed-guides.json` holds six articles seeded into a **Guides** blog —
+technique pieces aimed at the failure modes that actually sink DIY treatments
+(spraying instead of baiting, treating the sighting rather than the harborage,
+skipping the second pass). They are the top-of-funnel counterpart to the pest
+landing pages, and `main-article.liquid` closes each one with a related-products
+strip pointed at a pest collection.
+
+They are placeholder editorial and are seeded unpublished.
+
+## Structured data
+
+Product and Article JSON-LD, including `aggregateRating` when a review app has
+supplied one. Worth the markup here specifically: pest landing pages are the
+acquisition channel, and review stars in search results move click-through on
+exactly those queries.
 
 ## No theme JavaScript
 

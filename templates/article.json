@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-article",
+      "settings": {
+        "related_eyebrow": "What you'll need",
+        "related_heading": "Products for this"
+      }
+    }
+  },
+  "order": ["main"]
+}
