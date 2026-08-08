@@ -1,15 +1,16 @@
 {
   "sections": {
-    "guide": {
-      "type": "pest-guide",
-      "settings": { "eyebrow": "Identification and treatment" }
-    },
     "products": {
       "type": "main-collection",
       "settings": {
-        "eyebrow": "Recommended",
+        "show_tiles": true,
+        "guides_label": "View treatment guides and videos",
         "per_page": 24
       }
+    },
+    "guide": {
+      "type": "pest-guide",
+      "settings": { "eyebrow": "Identification and treatment" }
     },
     "finder": {
       "type": "pest-finder",
@@ -21,5 +22,5 @@
       }
     }
   },
-  "order": ["guide", "products", "finder"]
+  "order": ["products", "guide", "finder"]
 }

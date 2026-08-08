@@ -75,6 +75,10 @@ From `design-system/diy-bug-control/MASTER.md`:
   to aim at, and clears the 3:1 UI-component threshold.
 - **Safety and application copy sit above marketing copy** on product pages.
 
+> `design-system/diy-bug-control/swatches.html` still shows the superseded
+> green/orange palette and has not been regenerated. MASTER.md §3 is the current
+> reference.
+
 Every colour pair in `assets/base.css` is contrast-verified; the measurements
 are recorded in MASTER.md §3. The palette deliberately departs from the one the
 design generator produced, which targeted 3:1 and failed AA for normal-size

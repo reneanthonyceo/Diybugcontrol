@@ -1,33 +1,38 @@
 /* DIY Bug Control — design tokens
  * Generated from design-system/diy-bug-control/MASTER.md
- * All color pairs WCAG-verified. See MASTER.md §3 for the contrast table.
+ * All colour pairs WCAG-verified. See MASTER.md §3 for the contrast table.
+ * Mirrors assets/base.css, which is what the Shopify theme actually loads.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700&family=Rubik:wght@300;400;500;600;700&display=swap');
-
 :root {
-  /* Color — light */
-  --color-primary: #047857;
-  --color-primary-hover: #065F46;
-  --color-on-primary: #FFFFFF;
-  --color-accent: #C2410C;
-  --color-accent-hover: #9A3412;
-  --color-on-accent: #FFFFFF;
-  --color-background: #ECFDF5;
-  --color-card: #FFFFFF;
-  --color-foreground: #064E3B;
-  --color-muted-foreground: #64748B;
-  --color-border: #A7F3D0;
-  --color-border-interactive: #7C9488;
-  --color-destructive: #DC2626;
-  --color-on-destructive: #FFFFFF;
-  --color-ring: #047857;
-  --color-star: #D97706;
+  /* Retail catalog palette: blue does the work, red marks actions and
+     wayfinding. Verified pairs are recorded in MASTER.md §3. */
+  --color-primary: #0f4c91;
+  --color-primary-hover: #0b3b72;
+  --color-on-primary: #ffffff;
+  --color-accent: #c8102e;
+  --color-accent-hover: #a00d25;
+  --color-on-accent: #ffffff;
+  --color-background: #ffffff;
+  --color-card: #ffffff;
+  --color-foreground: #333333;
+  --color-muted-foreground: #5a6470;
+  --color-border: #dde1e6;
+  --color-border-interactive: #818c99;
+  --color-destructive: #c8102e;
+  --color-on-destructive: #ffffff;
+  --color-ring: #0f4c91;
+  --color-star: #d97706;
+  --color-surface-alt: #f4f5f7;
+  --color-hairline: #dde1e6;
+  --color-bar: #0f4c91;
+  --color-heading: #222222;
 
-  /* Typography */
+  --shadow-card: 0 1px 2px rgb(15 23 35 / 0.06);
+  --shadow-hover: 0 3px 10px rgb(15 23 35 / 0.13);
+
   --font-heading: 'Rubik', system-ui, sans-serif;
   --font-body: 'Nunito Sans', system-ui, sans-serif;
-
   --text-display: clamp(2.25rem, 5vw, 3.5rem);
   --text-h1: clamp(1.875rem, 4vw, 2.5rem);
   --text-h2: 1.5rem;
@@ -36,120 +41,83 @@
   --text-small: 0.875rem;
   --text-price: 1.5rem;
 
-  --leading-tight: 1.1;
-  --leading-heading: 1.2;
-  --leading-body: 1.5;
-
-  /* Spacing */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
+  --space-5: 20px;
   --space-6: 24px;
   --space-8: 32px;
   --space-12: 48px;
   --space-16: 64px;
 
-  /* Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 8px;
   --radius-full: 9999px;
 
-  /* Elevation */
-  --shadow-card: 0 1px 3px rgb(6 78 59 / 0.08), 0 1px 2px rgb(6 78 59 / 0.06);
-  --shadow-hover: 0 4px 12px rgb(6 78 59 / 0.12);
-
-  /* Motion */
   --duration-press: 100ms;
   --duration-hover: 150ms;
   --duration-card: 200ms;
-  --duration-modal-in: 250ms;
-  --duration-modal-out: 200ms;
-  --duration-reveal: 350ms;
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
 
-  /* Controls */
   --input-height: 48px;
   --touch-target-min: 44px;
   --focus-ring-width: 3px;
+
+  --measure: 68ch;
+  --container: 1400px;
+  --sidebar: 232px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --color-primary: #34D399;
-    --color-primary-hover: #6EE7B7;
-    --color-on-primary: #052E1F;
-    --color-accent: #FB923C;
-    --color-accent-hover: #FDBA74;
-    --color-on-accent: #431407;
-    --color-background: #0B1A14;
-    --color-card: #12241C;
-    --color-foreground: #E8F5EE;
-    --color-muted-foreground: #9BB3A5;
-    --color-border: #1E3A2C;
-    --color-border-interactive: #4A7A64;
-    --color-destructive: #F87171;
-    --color-on-destructive: #431407;
-    --color-ring: #34D399;
-    --color-star: #FBBF24;
-
+    --color-primary: #7fb3f0;
+    --color-primary-hover: #a9cdf7;
+    --color-on-primary: #08213f;
+    --color-accent: #ff7a85;
+    --color-accent-hover: #ffa3aa;
+    --color-on-accent: #3d0009;
+    --color-background: #12181f;
+    --color-card: #1a222c;
+    --color-foreground: #e8edf3;
+    --color-muted-foreground: #a3b0be;
+    --color-border: #2c3846;
+    --color-border-interactive: #63788e;
+    --color-destructive: #ff7a85;
+    --color-on-destructive: #3d0009;
+    --color-ring: #7fb3f0;
+    --color-star: #fbbf24;
+    --color-surface-alt: #202a36;
+    --color-hairline: #2c3846;
+    --color-bar: #0b1620;
+    --color-heading: #ffffff;
     --shadow-card: 0 1px 3px rgb(0 0 0 / 0.4), 0 1px 2px rgb(0 0 0 / 0.3);
     --shadow-hover: 0 4px 12px rgb(0 0 0 / 0.5);
   }
 }
 
 :root[data-theme='dark'] {
-  --color-primary: #34D399;
-  --color-primary-hover: #6EE7B7;
-  --color-on-primary: #052E1F;
-  --color-accent: #FB923C;
-  --color-accent-hover: #FDBA74;
-  --color-on-accent: #431407;
-  --color-background: #0B1A14;
-  --color-card: #12241C;
-  --color-foreground: #E8F5EE;
-  --color-muted-foreground: #9BB3A5;
-  --color-border: #1E3A2C;
-  --color-border-interactive: #4A7A64;
-  --color-destructive: #F87171;
-  --color-on-destructive: #431407;
-  --color-ring: #34D399;
-  --color-star: #FBBF24;
-
+  --color-primary: #7fb3f0;
+  --color-primary-hover: #a9cdf7;
+  --color-on-primary: #08213f;
+  --color-accent: #ff7a85;
+  --color-accent-hover: #ffa3aa;
+  --color-on-accent: #3d0009;
+  --color-background: #12181f;
+  --color-card: #1a222c;
+  --color-foreground: #e8edf3;
+  --color-muted-foreground: #a3b0be;
+  --color-border: #2c3846;
+  --color-border-interactive: #63788e;
+  --color-destructive: #ff7a85;
+  --color-on-destructive: #3d0009;
+  --color-ring: #7fb3f0;
+  --color-star: #fbbf24;
+  --color-surface-alt: #202a36;
+  --color-hairline: #2c3846;
+  --color-bar: #0b1620;
+  --color-heading: #ffffff;
   --shadow-card: 0 1px 3px rgb(0 0 0 / 0.4), 0 1px 2px rgb(0 0 0 / 0.3);
   --shadow-hover: 0 4px 12px rgb(0 0 0 / 0.5);
-}
-
-/* Baseline */
-body {
-  background: var(--color-background);
-  color: var(--color-foreground);
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  line-height: var(--leading-body);
-}
-
-h1, h2, h3, h4 {
-  font-family: var(--font-heading);
-  line-height: var(--leading-heading);
-}
-
-:where(a, button, input, select, textarea):focus-visible {
-  outline: var(--focus-ring-width) solid var(--color-ring);
-  outline-offset: 2px;
-}
-
-:where(button, a[role='button'], [role='button']) {
-  cursor: pointer;
-  min-height: var(--touch-target-min);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
 }

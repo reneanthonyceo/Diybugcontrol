@@ -2,12 +2,30 @@
   "type": "header",
   "name": "Header",
   "sections": {
+    "utility-bar": {
+      "type": "utility-bar",
+      "settings": {
+        "shipping_lead": "FAST FREE SHIPPING",
+        "shipping_tail": "On Your Entire Order*",
+        "phone_label": "Ask A Pro:",
+        "hours": "Mon-Fri 9am-5pm ET",
+        "contact_label": "Contact Us"
+      }
+    },
     "header": {
       "type": "header",
       "settings": {
-        "menu": "main-menu"
+        "menu": "main-menu",
+        "search_placeholder": "Search product, pest, or brand"
+      }
+    },
+    "promo-banner": {
+      "type": "promo-banner",
+      "settings": {
+        "message": "Fall pest prevention starts now — 10% off perimeter treatments",
+        "link_label": "Shop now"
       }
     }
   },
-  "order": ["header"]
+  "order": ["utility-bar", "header", "promo-banner"]
 }

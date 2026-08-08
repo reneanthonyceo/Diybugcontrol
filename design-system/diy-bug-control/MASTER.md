@@ -41,63 +41,68 @@ layer's discipline everywhere (one dominant CTA per view).
 
 ## 3. Color tokens
 
-Palette source: `colors.csv` → E-commerce, "Success green + urgency orange".
-Green signals *safe and effective*; orange drives *act now* without the alarm of red,
-which stays reserved for genuine errors.
+**Revised for the catalog direction.** The original green/orange palette was
+built for an editorial, conversion-focused layout. The store is now modelled on
+the big-box DIY retail convention — dense grids, sidebar categories, a utility
+bar — and that register calls for the blue/red retail scheme those stores share.
+Blue carries structure and links; red marks actions and wayfinding. The previous
+palette is recorded in §11 for reference.
+
+Colour is not the brand here. The name, glyph, and voice are. A blue/red retail
+palette is generic to this category — deliberately so, since adopting a specific
+competitor's brand marks is a different thing entirely and is not done.
 
 ### Light mode
 
 | Token | Hex | Use |
 |---|---|---|
-| `--color-primary` | `#047857` | Brand, primary buttons, links |
-| `--color-primary-hover` | `#065F46` | Hover/active on primary |
-| `--color-on-primary` | `#FFFFFF` | Text on primary |
-| `--color-accent` | `#C2410C` | Add-to-cart, urgency CTA |
-| `--color-accent-hover` | `#9A3412` | Hover/active on accent |
-| `--color-on-accent` | `#FFFFFF` | Text on accent |
-| `--color-background` | `#ECFDF5` | Page canvas |
-| `--color-card` | `#FFFFFF` | Product cards, panels |
-| `--color-foreground` | `#064E3B` | Body text |
-| `--color-muted-foreground` | `#64748B` | Secondary text, metadata |
-| `--color-border` | `#A7F3D0` | Decorative dividers **only** |
-| `--color-border-interactive` | `#7C9488` | Input/control borders |
-| `--color-destructive` | `#DC2626` | Errors, destructive actions |
-| `--color-ring` | `#047857` | Focus ring |
+| `--color-primary` | `#0F4C91` | Links, nav, primary buttons, brand chrome |
+| `--color-primary-hover` | `#0B3B72` | Hover/active on primary |
+| `--color-accent` | `#C8102E` | Add-to-cart, sidebar headings, active view toggle |
+| `--color-accent-hover` | `#A00D25` | Hover/active on accent |
+| `--color-background` | `#FFFFFF` | Page canvas |
+| `--color-surface-alt` | `#F4F5F7` | Breadcrumb band, hero band, select fields |
+| `--color-foreground` | `#333333` | Body text |
+| `--color-heading` | `#222222` | Headings |
+| `--color-muted-foreground` | `#5A6470` | Secondary text, counts |
+| `--color-hairline` | `#DDE1E6` | Structural rules, card borders |
+| `--color-border-interactive` | `#818C99` | Input and control borders |
+| `--color-star` | `#D97706` | Rating stars |
 
 ### Dark mode
 
 | Token | Hex | Use |
 |---|---|---|
-| `--color-primary` | `#34D399` | Brand, links, icons |
-| `--color-on-primary` | `#052E1F` | Text on primary |
-| `--color-accent` | `#FB923C` | Urgency CTA |
-| `--color-on-accent` | `#431407` | Text on accent |
-| `--color-background` | `#0B1A14` | Page canvas |
-| `--color-card` | `#12241C` | Cards, panels |
-| `--color-foreground` | `#E8F5EE` | Body text |
-| `--color-muted-foreground` | `#9BB3A5` | Secondary text |
-| `--color-border-interactive` | `#4A7A64` | Input/control borders |
-| `--color-destructive` | `#F87171` | Errors |
+| `--color-primary` | `#7FB3F0` | Links, nav |
+| `--color-on-primary` | `#08213F` | Text on primary |
+| `--color-accent` | `#FF7A85` | Actions |
+| `--color-on-accent` | `#3D0009` | Text on accent |
+| `--color-background` | `#12181F` | Page canvas |
+| `--color-card` | `#1A222C` | Cards, panels |
+| `--color-foreground` | `#E8EDF3` | Body text |
+| `--color-muted-foreground` | `#A3B0BE` | Secondary text |
+| `--color-border-interactive` | `#63788E` | Input and control borders |
 
 ### Verified contrast
 
 | Pair | Ratio | Grade |
 |---|---|---|
-| Body text on background (light) | 9.23:1 | AAA |
-| Body text on card (light) | 9.72:1 | AAA |
-| White on primary `#047857` | 5.48:1 | AA |
-| White on accent `#C2410C` | 5.18:1 | AA |
-| Muted text on card (light) | 4.76:1 | AA |
-| Body text on background (dark) | 15.98:1 | AAA |
-| Primary on background (dark) | 9.32:1 | AAA |
-| Accent on background (dark) | 7.92:1 | AAA |
-| Interactive borders vs. surface | ≥3.2:1 | AA (UI) |
+| Primary on white / white on primary | 8.53:1 | AAA |
+| Accent on white / white on accent | 5.88:1 | AA |
+| Body text `#333` on white | 12.63:1 | AAA |
+| Muted `#5A6470` on white | 6.01:1 | AA |
+| Muted `#5A6470` on band `#F4F5F7` | 5.66:1 | AA |
+| Interactive border on white | 3.42:1 | AA (UI) |
+| Body text on dark ground | 15.17:1 | AAA |
+| Primary on dark ground | 8.17:1 | AAA |
+| Accent on dark ground | 7.12:1 | AAA |
+| Dark text on accent button | 6.97:1 | AA |
+| Interactive border on dark card | 3.52:1 | AA (UI) |
 
-**Do not substitute `#059669` or `#EA580C`** (the raw database values). They land at
-3.77:1 and 3.56:1 — legal for large text and UI shapes, but failing for
-normal-size button labels, which is exactly where they'd be used.
-
----
+`#6B7280` was rejected as the muted tone: it measures 4.43:1 on the `#F4F5F7`
+band and fails AA there, even though it passes on white. `#9AA4B0` and `#55697E`
+were rejected as interactive borders at 2.53:1 and 2.83:1 — both below the 3:1
+UI-component threshold.
 
 ## 4. Typography
 
@@ -128,19 +133,24 @@ Never set body text below 16px. Application instructions and safety warnings use
 
 ## 5. Spacing, radius, elevation
 
-Standard density (marketing + catalog, not dashboard).
+**Catalog density.** Container widened to 1400px, section rhythm halved, grid
+gaps tightened, radii reduced to 3/5/8px, and the product grid minimum dropped
+from 240px to 190px so more of the catalog is visible per screen. An editorial
+64px section gap wastes a screen that exists to show products.
 
 ```css
 --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
---space-6: 24px;  --space-8: 32px;  --space-12: 48px; --space-16: 64px;
+--space-5: 20px;  --space-6: 24px;  --space-8: 32px;
+--space-12: 48px; --space-16: 64px;
 
---radius-sm: 4px;  --radius-md: 8px;  --radius-lg: 12px;  --radius-full: 9999px;
+--radius-sm: 3px;  --radius-md: 5px;  --radius-lg: 8px;  --radius-full: 9999px;
 
---shadow-card:  0 1px 3px rgb(6 78 59 / 0.08), 0 1px 2px rgb(6 78 59 / 0.06);
---shadow-hover: 0 4px 12px rgb(6 78 59 / 0.12);
+--container: 1400px;   /* was 1180px */
+--sidebar: 232px;      /* category rail on collection pages */
 ```
 
-Section rhythm: `--space-16` between major page sections, `--space-8` within.
+Section rhythm: `--space-8` between sections, `--space-6` within. Use
+`.section-loose` for the few editorial sections that still want air.
 
 ---
 
@@ -264,6 +274,11 @@ Breakpoints to verify: **375, 768, 1024, 1440**.
 
 The `--design-system` generator was overridden in three places. Recording them so
 they don't get silently reverted:
+
+**Superseded palette.** §3 originally specified a green/orange scheme
+(`#047857` / `#C2410C` on a `#ECFDF5` ground) chosen for an editorial layout.
+It is retained here only as history — the tokens in `assets/base.css` are the
+live values.
 
 | Generator said | Used instead | Why |
 |---|---|---|

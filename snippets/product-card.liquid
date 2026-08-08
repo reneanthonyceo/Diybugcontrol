@@ -49,12 +49,18 @@
 
   <div class="card-body">
     <h3 class="card-name">{{ product.title }}</h3>
-    {% render 'star-rating', product: product, size: 14 %}
+
+    {%- assign sku = product.selected_or_first_available_variant.sku -%}
+    {%- if sku != blank -%}
+      <span class="card-sku">{{ 'product.sku' | t: sku: sku }}</span>
+    {%- endif -%}
+
+    {% render 'star-rating', product: product, size: 13 %}
 
     {%- if product.metafields.dbc.summary.value != blank -%}
       <p class="card-summary">{{ product.metafields.dbc.summary.value }}</p>
     {%- else -%}
-      <p class="card-summary">{{ product.description | strip_html | truncate: 120 }}</p>
+      <p class="card-summary">{{ product.description | strip_html | truncate: 90 }}</p>
     {%- endif -%}
 
     <div class="card-foot">
@@ -65,9 +71,27 @@
           {{ product.price | money }}
         {%- endif -%}
       </span>
+      {%- if product.compare_at_price > product.price -%}
+        <span class="card-compare tabular">{{ product.compare_at_price | money }}</span>
+      {%- endif -%}
       {%- if unit != blank -%}
         <span class="card-unit muted">{{ unit }}</span>
       {%- endif -%}
     </div>
+
+    <span class="card-stock {% if product.available %}is-in{% else %}is-out{% endif %}">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        {%- if product.available -%}
+          <path d="M20 6 9 17l-5-5"></path>
+        {%- else -%}
+          <path d="M18 6 6 18M6 6l12 12"></path>
+        {%- endif -%}
+      </svg>
+      {%- if product.available -%}
+        {{ 'product.in_stock' | t }}
+      {%- else -%}
+        {{ 'product.sold_out' | t }}
+      {%- endif -%}
+    </span>
   </div>
 </article>

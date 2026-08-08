@@ -1,0 +1,156 @@
+{% comment %}
+  Utility bar — the thin strip above the header. Shipping promise on the left,
+  phone support on the right. Standard furniture on a catalog store, and the
+  first thing a price-sensitive shopper looks for.
+{% endcomment %}
+
+<div class="utility-bar">
+  <div class="container utility-inner">
+    {%- if section.settings.shipping_lead != blank -%}
+      <span class="utility-shipping">
+        <strong>{{ section.settings.shipping_lead }}</strong>
+        {%- if section.settings.shipping_tail != blank %} {{ section.settings.shipping_tail }}{% endif -%}
+      </span>
+    {%- endif -%}
+
+    <div class="utility-links">
+      {%- if section.settings.phone != blank -%}
+        <span class="utility-pro">
+          <span class="utility-pro-label">{{ section.settings.phone_label }}</span>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 13a8 8 0 0 1 16 0"></path>
+            <path d="M4 13v3a2 2 0 0 0 2 2h1v-6H6a2 2 0 0 0-2 2zM20 13v3a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <a class="utility-phone" href="tel:{{ section.settings.phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' }}">
+            {{ section.settings.phone }}
+          </a>
+          {%- if section.settings.hours != blank -%}
+            <span class="utility-hours">{{ section.settings.hours }}</span>
+          {%- endif -%}
+        </span>
+      {%- endif -%}
+
+      {%- if section.settings.contact_label != blank -%}
+        <a class="utility-contact" href="{{ section.settings.contact_url }}">
+          <svg width="17" height="14" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="1.5" y="1.5" width="21" height="17" rx="2"></rect>
+            <path d="m2 3 10 7.5L22 3"></path>
+          </svg>
+          {{ section.settings.contact_label }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .utility-bar {
+    background: var(--color-card);
+    font-size: 0.82rem;
+    color: var(--color-muted-foreground);
+  }
+  .utility-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    min-height: 34px;
+    padding-block: var(--space-1);
+  }
+  .utility-shipping strong {
+    color: var(--color-primary);
+    font-weight: 800;
+    letter-spacing: 0.01em;
+  }
+  .utility-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-left: auto;
+  }
+  .utility-pro {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .utility-pro-label {
+    font-weight: 700;
+    color: var(--color-heading);
+  }
+  .utility-pro svg { color: var(--color-primary); }
+  .utility-phone {
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+  .utility-hours { color: var(--color-muted-foreground); }
+  .utility-contact {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding-left: var(--space-4);
+    border-left: 1px solid var(--color-hairline);
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .utility-contact:hover { text-decoration: underline; }
+  @media (max-width: 760px) {
+    .utility-inner { justify-content: center; }
+    .utility-shipping { width: 100%; text-align: center; }
+    .utility-links { margin-inline: auto; }
+    .utility-hours { display: none; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Utility bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "shipping_lead",
+      "label": "Shipping promise (emphasised)",
+      "default": "FAST FREE SHIPPING"
+    },
+    {
+      "type": "text",
+      "id": "shipping_tail",
+      "label": "Shipping promise (rest)",
+      "default": "On Your Entire Order*"
+    },
+    {
+      "type": "text",
+      "id": "phone_label",
+      "label": "Phone label",
+      "default": "Ask A Pro:"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone number"
+    },
+    {
+      "type": "text",
+      "id": "hours",
+      "label": "Support hours",
+      "default": "Mon-Fri 9am-5pm ET"
+    },
+    {
+      "type": "text",
+      "id": "contact_label",
+      "label": "Contact link label",
+      "default": "Contact Us"
+    },
+    {
+      "type": "url",
+      "id": "contact_url",
+      "label": "Contact link"
+    }
+  ],
+  "enabled_on": {
+    "groups": ["header"]
+  }
+}
+{% endschema %}

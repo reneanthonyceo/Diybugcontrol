@@ -1,37 +1,90 @@
+{% comment %}
+  Header — catalog layout: brand, prominent search, cart on the top row; the
+  category nav on its own row beneath. Search is given real estate rather than
+  hidden behind an icon, because on a store with hundreds of SKUs search is the
+  primary navigation, not a fallback.
+
+  Dropdowns are pure CSS/HTML via <details>, so they work without JavaScript and
+  stay keyboard-operable.
+{% endcomment %}
+
 <header class="site-header">
   <div class="container header-bar">
     <a class="header-brand" href="{{ routes.root_url }}">
-      {% render 'glyph', glyph: 'bug', size: 30 %}
+      {% render 'glyph', glyph: 'bug', size: 32 %}
       <span class="header-brand-name">{{ shop.name }}</span>
     </a>
 
-    <nav aria-label="{{ 'accessibility.main_nav' | t }}">
-      <ul class="header-nav">
-        {%- for link in section.settings.menu.links -%}
-          <li>
-            <a
-              href="{{ link.url }}"
-              {% if link.current or link.child_active %}aria-current="page"{% endif %}
-            >
-              {{ link.title }}
-            </a>
-          </li>
-        {%- endfor -%}
-      </ul>
-    </nav>
+    <form class="header-search" action="{{ routes.search_url }}" method="get" role="search">
+      <label class="visually-hidden" for="header-search-input">{{ 'general.search' | t }}</label>
+      <input
+        id="header-search-input"
+        type="search"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="{{ section.settings.search_placeholder | escape }}"
+        autocomplete="off"
+      >
+      <input type="hidden" name="type" value="product">
+      <button type="submit" class="header-search-go">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="m20 20-3.5-3.5"></path>
+        </svg>
+        <span class="visually-hidden">{{ 'general.search' | t }}</span>
+      </button>
+    </form>
 
     <a class="header-cart" href="{{ routes.cart_url }}">
-      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.55L21 8H6"></path>
         <circle cx="10" cy="20" r="1.2"></circle>
         <circle cx="18" cy="20" r="1.2"></circle>
       </svg>
-      <span>{{ 'cart.title' | t }}</span>
+      <span class="header-cart-label">{{ 'cart.title' | t }}</span>
       <span class="header-cart-count tabular" data-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>
         {{ cart.item_count }}
       </span>
     </a>
   </div>
+
+  <nav class="header-nav-row" aria-label="{{ 'accessibility.main_nav' | t }}">
+    <div class="container">
+      <ul class="header-nav">
+        {%- for link in section.settings.menu.links -%}
+          <li class="header-nav-item">
+            {%- if link.links.size > 0 -%}
+              <details class="header-drop">
+                <summary>
+                  {{ link.title }}
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m6 9 6 6 6-6"></path>
+                  </svg>
+                </summary>
+                <ul class="header-submenu">
+                  {%- for child in link.links -%}
+                    <li>
+                      <a href="{{ child.url }}" {% if child.current %}aria-current="page"{% endif %}>
+                        {{ child.title }}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </details>
+            {%- else -%}
+              <a
+                class="header-nav-link"
+                href="{{ link.url }}"
+                {% if link.current or link.child_active %}aria-current="page"{% endif %}
+              >
+                {{ link.title }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </nav>
 </header>
 
 {% stylesheet %}
@@ -40,13 +93,13 @@
     top: 0;
     z-index: 20;
     background: var(--color-card);
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-hairline);
   }
   .header-bar {
     display: flex;
     align-items: center;
     gap: var(--space-4);
-    min-height: 68px;
+    min-height: 64px;
     flex-wrap: wrap;
     padding-block: var(--space-2);
   }
@@ -58,25 +111,53 @@
     text-decoration: none;
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 1.05rem;
-    margin-right: auto;
+    font-size: 1.1rem;
+    flex: none;
   }
   .header-brand svg {
     color: var(--color-primary);
     flex: none;
   }
   .header-brand-name { white-space: nowrap; }
-  .header-nav {
+
+  .header-search {
     display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    flex: 1 1 320px;
+    min-width: 0;
+    max-width: 620px;
+    margin-inline: auto;
   }
-  .header-nav a {
+  .header-search input {
+    flex: 1;
+    min-width: 0;
+    height: 42px;
+    border: 1.5px solid var(--color-border-interactive);
+    border-right: 0;
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+    padding: 0 var(--space-3);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    background: var(--color-card);
+    color: var(--color-foreground);
+  }
+  .header-search-go {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 42px;
+    flex: none;
+    border: 0;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    cursor: pointer;
+  }
+  .header-search-go:hover { background: var(--color-primary-hover); }
+
+  .header-cart {
     display: inline-flex;
     align-items: center;
+    gap: var(--space-2);
     min-height: var(--touch-target-min);
     padding: 0 var(--space-3);
     border-radius: var(--radius-md);
@@ -84,27 +165,10 @@
     text-decoration: none;
     font-size: var(--text-small);
     font-weight: 700;
-  }
-  .header-nav a:hover { background: var(--color-surface-alt); }
-  .header-nav a[aria-current='page'] {
-    color: var(--color-primary);
-    box-shadow: inset 0 -2px 0 var(--color-primary);
-    border-radius: 0;
-  }
-  .header-cart {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    min-height: var(--touch-target-min);
-    padding: 0 var(--space-4);
-    border: 1.5px solid var(--color-primary);
-    border-radius: var(--radius-md);
-    color: var(--color-primary);
-    text-decoration: none;
-    font-size: var(--text-small);
-    font-weight: 700;
+    flex: none;
   }
   .header-cart:hover { background: var(--color-surface-alt); }
+  .header-cart svg { color: var(--color-primary); }
   .header-cart-count {
     display: inline-grid;
     place-items: center;
@@ -116,10 +180,95 @@
     color: var(--color-on-accent);
     font-size: 0.72rem;
   }
-  @media (max-width: 560px) {
-    .header-bar { justify-content: space-between; }
-    .site-header nav { order: 3; width: 100%; }
-    .header-nav { justify-content: space-between; width: 100%; }
+
+  .header-nav-row {
+    border-top: 1px solid var(--color-hairline);
+    background: var(--color-card);
+  }
+  .header-nav {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+  }
+  .header-nav-item { position: relative; }
+  .header-nav-link,
+  .header-drop > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-height: var(--touch-target-min);
+    padding: 0 var(--space-4);
+    color: var(--color-foreground);
+    text-decoration: none;
+    font-size: var(--text-small);
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+    white-space: nowrap;
+  }
+  .header-drop > summary::-webkit-details-marker { display: none; }
+  .header-nav-link:hover,
+  .header-drop > summary:hover {
+    background: var(--color-surface-alt);
+    color: var(--color-primary);
+  }
+  .header-nav-link[aria-current='page'] {
+    color: var(--color-primary);
+    box-shadow: inset 0 -3px 0 var(--color-primary);
+  }
+  .header-drop[open] > summary {
+    background: var(--color-surface-alt);
+    color: var(--color-primary);
+  }
+  .header-submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 30;
+    min-width: 240px;
+    list-style: none;
+    margin: 0;
+    padding: var(--space-2);
+    background: var(--color-card);
+    border: 1px solid var(--color-hairline);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    box-shadow: var(--shadow-hover);
+    display: flex;
+    flex-direction: column;
+  }
+  .header-submenu a {
+    display: block;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    color: var(--color-foreground);
+    text-decoration: none;
+    font-size: var(--text-small);
+  }
+  .header-submenu a:hover {
+    background: var(--color-surface-alt);
+    color: var(--color-primary);
+  }
+
+  @media (max-width: 760px) {
+    .header-bar { gap: var(--space-2); }
+    .header-search {
+      order: 3;
+      flex-basis: 100%;
+      max-width: none;
+      margin-bottom: var(--space-2);
+    }
+    .header-cart-label { display: none; }
+    .header-brand { margin-right: auto; }
+    .header-nav {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .header-submenu { position: static; box-shadow: none; }
   }
 {% endstylesheet %}
 
@@ -131,7 +280,14 @@
       "type": "link_list",
       "id": "menu",
       "label": "Menu",
-      "default": "main-menu"
+      "default": "main-menu",
+      "info": "Nested menu items become dropdowns. Use a 'Shop by pest' parent with each pest beneath it."
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search products, pests, or brands"
     }
   ],
   "enabled_on": {

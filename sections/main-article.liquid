@@ -1,13 +1,8 @@
 {% render 'structured-data', type: 'article' %}
 
+{% render 'breadcrumbs' %}
+
 <div class="container">
-  <nav class="crumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
-    <ol>
-      <li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li>
-      <li><a href="{{ blog.url }}">{{ blog.title }}</a></li>
-      <li aria-current="page">{{ article.title }}</li>
-    </ol>
-  </nav>
 
   <article class="section article">
     <header class="article-head">

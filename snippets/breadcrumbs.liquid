@@ -1,0 +1,47 @@
+{% comment %}
+  Breadcrumb band. Full-bleed light strip directly under the nav, as on a
+  catalog store where shoppers arrive deep from search and need to know where
+  they landed.
+
+  Accepts:
+  - crumbs {Array} of {title, url}; the last entry renders as current
+  Usage:
+    {% assign crumbs = '' | split: '' %}
+    ... build with array push equivalent ...
+  In practice each template passes explicit values; see main-collection.
+{% endcomment %}
+
+<nav class="crumb-band" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+  <div class="container">
+    <ol class="crumb-list">
+      <li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li>
+
+      {%- case template.name -%}
+        {%- when 'product' -%}
+          {%- if collection.url -%}
+            <li><a href="{{ collection.url }}">{{ collection.title }}</a></li>
+          {%- endif -%}
+          <li aria-current="page">{{ product.title }}</li>
+
+        {%- when 'collection' -%}
+          <li aria-current="page">{{ collection.title }}</li>
+
+        {%- when 'blog' -%}
+          <li aria-current="page">{{ blog.title }}</li>
+
+        {%- when 'article' -%}
+          <li><a href="{{ blog.url }}">{{ blog.title }}</a></li>
+          <li aria-current="page">{{ article.title }}</li>
+
+        {%- when 'page' -%}
+          <li aria-current="page">{{ page.title }}</li>
+
+        {%- when 'search' -%}
+          <li aria-current="page">{{ 'general.search' | t }}</li>
+
+        {%- when 'cart' -%}
+          <li aria-current="page">{{ 'cart.title' | t }}</li>
+      {%- endcase -%}
+    </ol>
+  </div>
+</nav>

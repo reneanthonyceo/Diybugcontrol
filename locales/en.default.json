@@ -14,7 +14,8 @@
       "body": "The link may be out of date. Start from your pest, or browse everything we carry.",
       "shop": "Browse all products",
       "home": "Back to home"
-    }
+    },
+    "search": "Search"
   },
   "accessibility": {
     "skip_to_content": "Skip to content",
@@ -47,14 +48,30 @@
       },
       "scale": "Out of {{ max }}"
     },
-    "reviews_empty": "Add your review app's block to this section from the theme editor to show customer reviews here."
+    "reviews_empty": "Add your review app's block to this section from the theme editor to show customer reviews here.",
+    "in_stock": "In stock",
+    "sku": "Item {{ sku }}"
   },
   "collection": {
     "empty": "No products in this collection yet.",
     "product_count": {
       "one": "{{ count }} product",
       "other": "{{ count }} products"
-    }
+    },
+    "of": "of",
+    "results": "results",
+    "sort_by": "Sort by",
+    "apply": "Apply",
+    "clear": "Clear all filters",
+    "categories": "Categories",
+    "shop_by_category": "Shop {{ title }} by category",
+    "view_label": "Result layout",
+    "view_grid": "Grid view",
+    "view_list": "List view",
+    "price_min": "Minimum price",
+    "price_max": "Maximum price",
+    "min": "Min",
+    "max": "Max"
   },
   "cart": {
     "title": "Cart",
@@ -71,5 +88,9 @@
   },
   "blog": {
     "empty": "No guides published yet."
+  },
+  "customer": {
+    "account": "My account",
+    "log_in": "Sign in"
   }
 }

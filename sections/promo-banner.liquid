@@ -1,0 +1,98 @@
+{% comment %}
+  Promotional strip below the nav. Solid brand colour, one message, one link.
+
+  Dismissal is deliberately not offered: it needs JavaScript and persistence to
+  behave properly, and a banner that reappears on every page is worse than one
+  that simply stays. Turn the section off in the editor when the promo ends.
+{% endcomment %}
+
+{%- if section.settings.message != blank -%}
+  <div class="promo-banner">
+    <div class="container promo-inner">
+      {%- if section.settings.link_url != blank -%}
+        <a class="promo-link" href="{{ section.settings.link_url }}">
+          <span class="promo-message">{{ section.settings.message }}</span>
+          {%- if section.settings.link_label != blank -%}
+            <span class="promo-cta">
+              {{ section.settings.link_label }}
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m7 5 7 7-7 7M14 5l7 7-7 7"></path>
+              </svg>
+            </span>
+          {%- endif -%}
+        </a>
+      {%- else -%}
+        <span class="promo-message">{{ section.settings.message }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .promo-banner {
+    background: var(--color-bar);
+    color: #ffffff;
+  }
+  .promo-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding-block: var(--space-2);
+    text-align: center;
+  }
+  .promo-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    color: #ffffff;
+    text-decoration: none;
+  }
+  .promo-link:hover .promo-cta { text-decoration: underline; }
+  .promo-link:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
+  }
+  .promo-message {
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+  }
+  .promo-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 700;
+    font-size: 0.88rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Promo banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Message",
+      "default": "Fall pest prevention starts now — 10% off perimeter treatments"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link"
+    }
+  ],
+  "enabled_on": {
+    "groups": ["header"]
+  }
+}
+{% endschema %}

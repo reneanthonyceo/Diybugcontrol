@@ -10,7 +10,6 @@
   assign tagline = collection.metafields.dbc.tagline.value
   assign signs = collection.metafields.dbc.signs.value
   assign steps = collection.metafields.dbc.steps.value
-  assign glyph = collection.metafields.dbc.glyph.value
   assign has_signs = false
   assign has_steps = false
   if signs != blank and signs.size > 0
@@ -22,31 +21,6 @@
 -%}
 
 {%- if tagline != blank or has_signs or has_steps -%}
-  <section class="pest-hero">
-    <div class="container pest-hero-inner">
-      <nav class="crumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
-        <ol>
-          <li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li>
-          <li><a href="{{ routes.collections_url }}">{{ 'general.collections' | t }}</a></li>
-          <li aria-current="page">{{ collection.title }}</li>
-        </ol>
-      </nav>
-
-      <div class="pest-hero-grid">
-        <div class="pest-hero-copy">
-          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
-          <h1>{{ collection.title }}</h1>
-          {%- if tagline != blank -%}
-            <p class="pest-lede">{{ tagline }}</p>
-          {%- endif -%}
-        </div>
-        <div class="pest-hero-art" aria-hidden="true">
-          {% render 'glyph', glyph: glyph, size: 104 %}
-        </div>
-      </div>
-    </div>
-  </section>
-
   {%- if has_signs or has_steps -%}
     <div class="container">
       <section class="section">
@@ -90,43 +64,6 @@
 {%- endif -%}
 
 {% stylesheet %}
-  .pest-hero {
-    background: linear-gradient(160deg, var(--color-surface-alt), var(--color-background) 70%);
-    border-bottom: 1px solid var(--color-border);
-  }
-  .pest-hero-inner {
-    padding-block: var(--space-8) var(--space-12);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-  }
-  .pest-hero-grid {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-8);
-    flex-wrap: wrap;
-  }
-  .pest-hero-copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    align-items: flex-start;
-    max-width: 46ch;
-  }
-  .pest-hero h1 {
-    font-size: var(--text-display);
-    line-height: 1.08;
-  }
-  .pest-lede {
-    font-size: 1.1rem;
-    color: var(--color-muted-foreground);
-  }
-  .pest-hero-art {
-    color: var(--color-primary);
-    opacity: 0.55;
-    flex: none;
-  }
   .pest-two-col {
     display: grid;
     gap: var(--space-6);
